@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_ORIGIN } from "./types";
 
-const image = `${SITE_ORIGIN}/images/flora-og.png`;
+const image = `${SITE_ORIGIN}/images/flora-og.webp`;
 
 export function pageMetadata(title: string, description: string, path = "/", options?: { noIndex?: boolean }): Metadata {
   const canonical = `${SITE_ORIGIN}${path}`;

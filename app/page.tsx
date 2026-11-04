@@ -22,7 +22,7 @@ export default async function HomePage() {
     <section className="original-hero-section"><div className="container">
       <div className="original-status-pills"><span>● Open Now</span><span>Abuja Delivery</span><span>Mon–Sat · 9:00 – 18:00</span></div>
       <div className="original-hero">
-        <Image src="/images/original-hero-bouquet.png" alt="Fresh Flora and Creations bouquet" fill priority sizes="(max-width: 800px) 100vw, 1180px" className="original-hero-image" />
+        <Image src="/images/original-hero-bouquet.webp" alt="Fresh Flora and Creations bouquet" fill priority sizes="(max-width: 800px) 100vw, 1180px" className="original-hero-image" />
         <div className="original-hero-overlay" aria-hidden="true" />
         <div className="original-hero-copy"><p className="original-hero-kicker">✦ Handcrafted in Abuja</p><h1>Celebrate Life&apos;s Special Moment with Fresh Flowers</h1><p>Bouquets, gift boxes, chocolates, wines and more beautifully arranged and delivered across Abuja the same day.</p><Link className="button original-hero-button" href="/shop">Shop now</Link><div className="hero-dots" aria-hidden="true"><span className="active" /><span /><span /><span /></div></div>
       </div>
