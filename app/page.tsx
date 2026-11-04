@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getCategories, getProducts } from "@/lib/api";
-import { ProductCard } from "@/components/ProductCard";
+import { ProductListing } from "@/components/ProductListing";
 import { pageMetadata } from "@/lib/seo";
 import { FaBirthdayCake, FaCandyCane, FaCookieBite, FaGift, FaMagic, FaPaw, FaRegGem, FaWineBottle } from "react-icons/fa";
 import type { IconType } from "react-icons";
@@ -10,7 +10,6 @@ export const metadata = pageMetadata("Celebrate life's special moments", "Fresh 
 
 export default async function HomePage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
-  const visibleProducts = products.slice(0, 9);
   const extras: Array<[string, string, IconType]> = [
     ["Fruit Wine", "₦5,000", FaWineBottle],
     ["Gift Card", "₦1,000", FaGift],
@@ -33,9 +32,7 @@ export default async function HomePage() {
     <section className="section container shop-home-section">
       <div className="section-header"><div><p className="eyebrow">Shop by Type</p><h2>Find something beautiful.</h2></div></div>
       <div className="category-pills"><Link className="category-pill category-pill-active" href="/">All</Link>{categories.map((category) => <Link key={category.id} className="category-pill" href={`/shop?category=${category.slug}`}>{category.name}</Link>)}</div>
-      <div className="shop-meta"><span>Showing {visibleProducts.length} of {products.length} products</span><label>Sort <select defaultValue="newest" aria-label="Sort products"><option value="newest">Newest</option><option value="popular">Popularity</option><option value="low">Price — low to high</option><option value="high">Price — high to low</option></select></label></div>
-      <div className="product-grid">{visibleProducts.map((product) => <ProductCard key={product.id} product={product} />)}</div>
-      <div className="pager"><Link className="text-link" href="/shop">Prev</Link><span>1</span><Link className="text-link" href="/shop">2</Link><Link className="text-link" href="/shop">Next</Link></div>
+      <ProductListing products={products} pageSize={9} />
     </section>
 
     <section className="section container"><div className="gift-panel"><div className="section-header"><div><p className="eyebrow">Complete the gift</p><h2>A little something extra makes it unforgettable.</h2></div></div><div className="gift-grid">{extras.map(([name, price, Icon]) => <div className="gift-card" key={name}><span className="gift-icon" aria-hidden="true"><Icon /></span><div className="gift-card-copy"><strong>{name}</strong><span>{price}</span></div><span className="gift-card-arrow" aria-hidden="true"><FaMagic /></span></div>)}</div></div>

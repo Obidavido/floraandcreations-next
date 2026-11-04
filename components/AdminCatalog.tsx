@@ -98,20 +98,6 @@ export function AdminCatalog({ section, standalone }: { section: "products" | "c
     return () => { active = false; };
   }, [section, standalone]);
 
-  async function openProduct(product?: ProductRow) {
-    setError(""); setNotice(""); setImageFiles([]); setVariants([]); setSelectedProduct(null); setEditingVariant(null);
-    if (!product) { setEditingProduct(""); setProductForm(emptyProduct); return; }
-    setSaving(true);
-    try {
-      const detail = await adminRequest<ProductRow>(`/admin/products/${encodeURIComponent(String(product.id))}`);
-      setEditingProduct(String(detail.id));
-      setProductForm({ name: detail.name || "", description: detail.description || "", base_price: String(detail.base_price ?? ""), status: detail.status || "active", featured: detail.featured === true || Number(detail.featured) === 1, category_ids: (detail.category_ids || []).map(String) });
-      setSelectedProduct(detail);
-      setVariants(detail.variants || []);
-    } catch (detailError) { setError(showError(detailError)); }
-    finally { setSaving(false); }
-  }
-
   async function saveProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setSaving(true); setError(""); setNotice("");
     try {
@@ -166,7 +152,7 @@ export function AdminCatalog({ section, standalone }: { section: "products" | "c
   async function submitBasicResource(event: FormEvent<HTMLFormElement>) {
     event.preventDefault(); setSaving(true); setError(""); setNotice("");
     try {
-      let path = ""; let body: Record<string, unknown> = {}; let method = editingId ? "PUT" : "POST";
+      let path = ""; let body: Record<string, unknown> = {}; const method = editingId ? "PUT" : "POST";
       if (section === "categories") { path = editingId ? `/admin/categories/${encodeURIComponent(editingId)}` : "/admin/categories"; body = categoryForm; }
       else if (section === "add-ons") { path = editingId ? `/admin/add-ons/${encodeURIComponent(editingId)}` : "/admin/add-ons"; body = { ...addOnForm, price: Number(addOnForm.price), active: addOnForm.active ? 1 : 0 }; }
       else { path = editingId ? `/admin/delivery-zones/${encodeURIComponent(editingId)}` : "/admin/delivery-zones"; body = { ...zoneForm, fee: Number(zoneForm.fee) }; }

@@ -48,10 +48,6 @@ function normalizeProductImage(image: unknown) {
   return value.startsWith("/") ? value : `/${value}`;
 }
 
-function normalizeProducts(products: Product[]) {
-  return products.map((product) => ({ ...product, image: normalizeProductImage(product.image) }));
-}
-
 function mapProduct(product: ApiProduct): Product {
   const category = product.product_type?.[0]?.name || product.category || "Flowers";
   const detailImage = product.images?.find((image) => image.image_url || image.url);
@@ -116,14 +112,6 @@ async function authenticate(path: string, payload: Record<string, string>): Prom
 
 export function signIn(payload: Record<string, string>) { return authenticate("/auth/login", payload); }
 export function registerUser(payload: Record<string, string>) { return authenticate("/auth/register", payload); }
-
-function unwrap<T>(value: T | { data?: T; products?: T; categories?: T }): T {
-  if (value && typeof value === "object") {
-    const candidate = value as { data?: T; products?: T; categories?: T };
-    return (candidate.data ?? candidate.products ?? candidate.categories ?? value) as T;
-  }
-  return value;
-}
 
 export async function getProducts(): Promise<Product[]> {
   const response = await request<{ data?: ApiProduct[] } | ApiProduct[]>("/products");
