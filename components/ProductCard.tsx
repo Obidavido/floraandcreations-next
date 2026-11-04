@@ -8,7 +8,7 @@ export function ProductCard({ product }: { product: Product }) {
   return (
     <article className="product-card">
       <Link href={`/products/${product.slug}`} className="product-image-link">
-        <Image src={product.image} alt={product.name} width={640} height={640} className="product-image" />
+        {product.image ? <Image src={product.image} alt={product.name} width={640} height={640} className="product-image" /> : <div className="product-image product-image-empty" aria-label="Product image unavailable" />}
       </Link>
       <div className="product-info">
         <div>

@@ -9,7 +9,7 @@ pnpm install
 pnpm dev
 ```
 
-Copy `.env.example` to `.env.local` and set the API origin, public site origin, and WhatsApp number. The app uses safe reference catalog data when the external API base is not configured, so the public pages remain useful during development.
+Copy `.env.example` to `.env.local` and set the API origin, public site origin, and WhatsApp number. The storefront reads products, categories, thumbnails, prices, and availability from the existing cPanel API; it does not ship a dummy product catalog or local product images.
 
 ## Architecture
 
@@ -18,7 +18,7 @@ Copy `.env.example` to `.env.local` and set the API origin, public site origin, 
 - `/api/:path*` rewrites to `https://api.floraandcreations.com/api/:path*` in Vercel.
 - Customer addresses remain API-driven. The business address is the static corrected Jahi address.
 - The contact form expects the separately packaged public `POST /contact` API patch.
-- Project-owned images are stored as WebP in `public/`; PHP upload files are never modified.
+- Product images remain owned by the cPanel API and are rendered from each record's `thumbnail` path. PHP upload files are never modified.
 
 ## GitHub and Vercel workflow
 
@@ -29,7 +29,7 @@ Recommended Vercel variables:
 - `NEXT_PUBLIC_API_BASE_URL=/api`
 - `NEXT_PUBLIC_SITE_URL=https://floraandcreations.com`
 - `NEXT_PUBLIC_WHATSAPP_NUMBER=2347031677165` (or the approved chooser configuration)
-- `API_ORIGIN=https://api.floraandcreations.com`
+- `API_ORIGIN=https://floraandcreations.com`
 
 ## cPanel, CORS, and DNS
 
