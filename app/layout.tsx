@@ -1,8 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
-import { SiteHeader } from "@/components/SiteHeader";
-import { SiteFooter } from "@/components/SiteFooter";
-import { WhatsAppButton } from "@/components/WhatsAppButton";
+import { SiteChrome } from "@/components/SiteChrome";
 import { CartProvider } from "@/components/CartProvider";
 import "./globals.css";
 
@@ -23,10 +21,8 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`${jakarta.variable} ${manrope.variable}`}>
       <body>
         <CartProvider>
-          <SiteHeader />
+          <SiteChrome />
           <main>{children}</main>
-          <SiteFooter />
-          <WhatsAppButton />
         </CartProvider>
       </body>
     </html>

@@ -139,9 +139,6 @@ export function AccountSectionView({ section }: { section: string[] }) {
   const validSection = Boolean(title);
 
   return <div className="account-section-view">
-    <nav className="account-subnav" aria-label="Account navigation">
-      <Link href="/account">Account overview</Link><Link href="/account/orders">Orders</Link><Link href="/account/addresses">Addresses</Link><Link href="/account/wishlist">Wishlist</Link><Link href="/account/profile">Profile</Link>
-    </nav>
     <header className="account-section-heading"><p className="eyebrow">Your account</p><h1>{title || "Account section"}</h1><p className="detail-copy">{orderId ? "Review the details for your order." : sectionName === "orders" ? "Track your purchases and review order details." : sectionName === "addresses" ? "Save and update delivery addresses for faster checkout." : sectionName === "wishlist" ? "Keep your favourite arrangements close at hand." : sectionName === "profile" ? "Keep your contact details up to date." : "Manage your Flora and Creations account."}</p></header>
     {error && <p className="form-error account-message" role="alert">{error}</p>}
     {notice && <p className="form-success account-message" role="status">{notice}</p>}
