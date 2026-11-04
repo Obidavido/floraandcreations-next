@@ -3,20 +3,22 @@ import Image from "next/image";
 import { getCategories, getProducts } from "@/lib/api";
 import { ProductCard } from "@/components/ProductCard";
 import { pageMetadata } from "@/lib/seo";
+import { FaBirthdayCake, FaCandyCane, FaCookieBite, FaGift, FaMagic, FaPaw, FaRegGem, FaWineBottle } from "react-icons/fa";
+import type { IconType } from "react-icons";
 
 export const metadata = pageMetadata("Celebrate life's special moments", "Fresh flowers, gift boxes, chocolates and wines beautifully arranged and delivered across Abuja.");
 
 export default async function HomePage() {
   const [products, categories] = await Promise.all([getProducts(), getCategories()]);
   const visibleProducts = products.slice(0, 9);
-  const extras = [
-    ["Fruit Wine", "₦5,000"],
-    ["Gift Card", "₦1,000"],
-    ["Teddy Bear", "₦8,000"],
-    ["Chocolates", "₦4,000"],
-    ["Cookies", "₦3,000"],
-    ["Cake", "₦12,000"],
-    ["Vase Upgrade", "₦2,000"]
+  const extras: Array<[string, string, IconType]> = [
+    ["Fruit Wine", "₦5,000", FaWineBottle],
+    ["Gift Card", "₦1,000", FaGift],
+    ["Teddy Bear", "₦8,000", FaPaw],
+    ["Chocolates", "₦4,000", FaCandyCane],
+    ["Cookies", "₦3,000", FaCookieBite],
+    ["Cake", "₦12,000", FaBirthdayCake],
+    ["Vase Upgrade", "₦2,000", FaRegGem]
   ];
   return <>
     <section className="original-hero-section"><div className="container">
@@ -36,7 +38,7 @@ export default async function HomePage() {
       <div className="pager"><Link className="text-link" href="/shop">Prev</Link><span>1</span><Link className="text-link" href="/shop">2</Link><Link className="text-link" href="/shop">Next</Link></div>
     </section>
 
-    <section className="section container"><div className="gift-panel"><div className="section-header"><div><p className="eyebrow">Complete the gift</p><h2>A little something extra makes it unforgettable.</h2></div></div><div className="gift-grid">{extras.map(([name, price]) => <div className="gift-card" key={name}><strong>{name}</strong><span>{price}</span></div>)}</div></div>
+    <section className="section container"><div className="gift-panel"><div className="section-header"><div><p className="eyebrow">Complete the gift</p><h2>A little something extra makes it unforgettable.</h2></div></div><div className="gift-grid">{extras.map(([name, price, Icon]) => <div className="gift-card" key={name}><span className="gift-icon" aria-hidden="true"><Icon /></span><div className="gift-card-copy"><strong>{name}</strong><span>{price}</span></div><span className="gift-card-arrow" aria-hidden="true"><FaMagic /></span></div>)}</div></div>
     </section>
 
     <section className="promise-strip"><div className="container promise-grid"><div><strong>Freshness guaranteed</strong><span>Arranged the same day</span></div><div><strong>Same-day delivery</strong><span>Across Abuja</span></div><div><strong>Store pickup</strong><span>Jahi Plaza, Abuja</span></div></div></section>
