@@ -1,13 +1,18 @@
 export type AdminPage<T> = { data: T[]; pagination?: { total?: number; current_page?: number; per_page?: number; last_page?: number } };
 
-const API_ROOT = (process.env.NEXT_PUBLIC_API_BASE_URL || "/api").replace(/\/$/, "");
+const DEFAULT_API_ORIGIN = "https://api.floraandcreations.com";
+const configuredApiBase = process.env.NEXT_PUBLIC_API_BASE_URL?.trim();
+const API_ROOT = configuredApiBase && /^https?:\/\//i.test(configuredApiBase)
+  ? configuredApiBase.replace(/\/$/, "")
+  : `${process.env.NEXT_PUBLIC_API_ORIGIN?.replace(/\/$/, "") || DEFAULT_API_ORIGIN}/api`;
+const API_ORIGIN = API_ROOT.replace(/\/api\/?$/, "");
 
 export function adminMediaUrl(path?: string | null) {
   if (!path) return "";
   if (/^https?:\/\//i.test(path)) return path;
   const clean = path.replace(/^\/+/, "");
-  if (clean.startsWith("api/")) return `/${clean}`;
-  if (clean.startsWith("assets/")) return `${API_ROOT}/${clean}`;
+  if (clean.startsWith("api/")) return `${API_ORIGIN}/${clean}`;
+  if (clean.startsWith("assets/")) return `${API_ORIGIN}/api/${clean}`;
   return `${API_ROOT}/${clean}`;
 }
 
