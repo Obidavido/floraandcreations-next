@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-const apiOrigin = process.env.API_ORIGIN || "https://api.floraandcreations.com";
+const apiOrigin = process.env.API_ORIGIN || "https://floraandcreations.com";
 
 const nextConfig: NextConfig = {
   images: {
