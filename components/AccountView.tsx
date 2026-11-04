@@ -25,7 +25,15 @@ export function AccountView() {
       setLoading(true);
       accountRequest<Paginated<AccountOrder> | AccountOrder[]>("/account/orders?page=1&per_page=5")
         .then((result) => { if (active) setOrders(Array.isArray(result) ? result : result.data || []); })
-        .catch((requestError: unknown) => { if (active) setError(requestError instanceof Error ? requestError.message : "Your orders could not be loaded."); })
+        .catch((requestError: unknown) => {
+          if (!active) return;
+          const message = requestError instanceof Error ? requestError.message : "Your orders could not be loaded.";
+          if (/invalid or expired authentication token|missing authentication token/i.test(message)) {
+            window.localStorage.removeItem("fc.token.v1");
+            window.localStorage.removeItem("fc.user.v1");
+            setUser(null);
+          } else setError(message);
+        })
         .finally(() => { if (active) setLoading(false); });
     }
     return () => { active = false; };
