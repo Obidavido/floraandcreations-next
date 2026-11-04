@@ -170,3 +170,83 @@ p { line-height: 1.75; }
 .admin-bar { background: #1c2a20; color: white; padding: 9px 0; font-size: 12px; }
 @media (max-width: 800px) { .main-nav { display: none; } .header-inner { min-height: 76px; } .header-actions { gap: 12px; font-size: 11px; } .account-link { padding: 8px 11px; } .hero { padding: 44px 0 64px; } .hero-grid, .legacy-hero-grid, .detail-grid, .contact-grid, .cart-layout { grid-template-columns: 1fr; gap: 34px; } .hero-media, .legacy-hero-media { min-height: 320px; } .hero-media img, .legacy-hero-media img { height: 360px; min-height: 320px; } .original-hero { min-height: 440px; } .original-hero-copy { min-height: 440px; padding: 34px 26px; } .original-hero-copy h1 { font-size: 43px; } .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 14px; } .product-info { min-height: 104px; gap: 8px; } .product-info h3 { font-size: 16px; } .product-actions { align-items: stretch; flex-direction: column; } .product-actions .button, .product-actions .text-link { width: 100%; text-align: center; } .product-detail-title { font-size: clamp(34px, 9vw, 48px); } .promise-grid { grid-template-columns: 1fr; gap: 12px; } .footer-grid { grid-template-columns: 1fr; gap: 22px; } .footer-bottom { gap: 12px; flex-direction: column; } .section { padding: 60px 0; } .soft-panel { padding: 26px; } .cart-summary { position: static; } .account-links { grid-template-columns: 1fr; } .gift-grid { grid-template-columns: repeat(2, 1fr); } .shop-meta, .whatsapp-cta { align-items: flex-start; flex-direction: column; } }
 @media (max-width: 460px) { .container { width: min(100% - 28px, 1180px); } .brand { width: 112px; } .header-actions a:first-child { display: none; } .product-grid { grid-template-columns: 1fr 1fr; gap: 22px 10px; } .product-info { display: block; min-height: 100px; padding-top: 13px; } .product-info h3 { font-size: 15px; } .product-info .price { margin-top: 8px; } .product-actions .button { padding-inline: 10px; font-size: 11px; } h1 { font-size: 44px; } }
+
+
+/* Admin workspace: use the same clean page rhythm as the storefront. */
+.admin-page-hero { padding: 56px 0 48px; }
+.admin-page-hero h1 { font-size: clamp(38px, 5.8vw, 68px); }
+.admin-page-hero > .container > p:last-child { max-width: 620px; margin-bottom: 0; color: var(--muted); font-size: 16px; }
+.admin-section { padding-top: 48px; }
+.admin-workspace-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 30px; padding: 32px; border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 14px 34px rgba(33,63,40,.06); }
+.admin-workspace-copy h2 { margin: 0; font-size: clamp(28px, 3.4vw, 40px); }
+.admin-workspace-copy .detail-copy { max-width: 620px; margin: 12px 0 0; }
+.admin-account-email { margin: 10px 0 0; color: var(--green); font-size: 13px; font-weight: 700; }
+.admin-workspace-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 12px; }
+.admin-role-pill { display: inline-flex; align-items: center; padding: 9px 13px; border: 1px solid var(--line); border-radius: 999px; background: var(--sage); color: var(--green); font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.admin-login-section { padding-top: 48px; }
+.admin-login-section .form-card { box-shadow: 0 14px 34px rgba(33,63,40,.06); }
+@media (max-width: 800px) {
+  .admin-page-hero { padding: 44px 0 36px; }
+  .admin-workspace-card { grid-template-columns: 1fr; align-items: start; padding: 26px; }
+  .admin-workspace-actions { justify-content: flex-start; }
+}
+@media (max-width: 460px) {
+  .admin-workspace-card { padding: 21px; }
+  .admin-workspace-actions { align-items: stretch; flex-direction: column; }
+  .admin-workspace-actions .button { width: 100%; }
+  .admin-role-pill { width: fit-content; }
+}
+
+.admin-dashboard { display: grid; gap: 24px; }
+.admin-dashboard-heading { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+.admin-dashboard-heading h2 { margin: 0; font-size: clamp(30px, 4vw, 44px); }
+.admin-dashboard-heading .detail-copy { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; margin: 9px 0 0; }
+.admin-stat-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.admin-stat-card { display: grid; gap: 10px; min-height: 124px; padding: 21px; border: 1px solid var(--line); border-radius: 18px; background: #fff; box-shadow: 0 10px 26px rgba(33,63,40,.04); }
+.admin-stat-card > span { color: var(--muted); font-size: 12px; font-weight: 700; }
+.admin-stat-card strong { color: var(--green-dark); font-family: var(--font-jakarta), Arial, sans-serif; font-size: clamp(24px, 3vw, 34px); letter-spacing: -.04em; line-height: 1; overflow-wrap: anywhere; }
+.admin-stat-card small { color: var(--muted); font-size: 11px; }
+.admin-dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr); gap: 18px; align-items: start; }
+.admin-panel { min-width: 0; padding: 24px; border: 1px solid var(--line); border-radius: 20px; background: white; }
+.admin-panel-heading { display: flex; align-items: end; justify-content: space-between; gap: 14px; margin-bottom: 18px; }
+.admin-panel-heading .eyebrow { margin-bottom: 6px; }
+.admin-panel-heading h3 { color: var(--ink); font-size: 22px; }
+.admin-panel-heading > span { color: var(--muted); font-size: 11px; }
+.admin-table-wrap { overflow-x: auto; }
+.admin-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; }
+.admin-table th { padding: 10px 8px; color: var(--muted); font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .08em; }
+.admin-table td { padding: 13px 8px; border-top: 1px solid var(--line); vertical-align: middle; white-space: nowrap; }
+.admin-table td:first-child { white-space: normal; }
+.admin-table td strong, .admin-table td small { display: block; }
+.admin-table td small { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.admin-status-pill { display: inline-flex; padding: 5px 8px; border-radius: 99px; background: var(--sage); color: var(--green); font-size: 10px; font-weight: 800; }
+.admin-product-list { display: grid; }
+.admin-product-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 11px; padding: 13px 0; border-top: 1px solid var(--line); }
+.admin-product-rank { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--sage); color: var(--green); font-size: 11px; font-weight: 800; }
+.admin-product-row strong, .admin-product-row small { display: block; }
+.admin-product-row strong { font-size: 12px; line-height: 1.35; }
+.admin-product-row small { margin-top: 4px; color: var(--muted); font-size: 10px; }
+.admin-product-row b { color: var(--green); font-size: 11px; white-space: nowrap; }
+.admin-empty-note, .admin-loading, .admin-footnote { color: var(--muted); font-size: 12px; }
+.admin-alert { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 13px 16px; border: 1px solid #f0c9c3; border-radius: 12px; background: #fff8f6; color: #8c3528; font-size: 12px; }
+.admin-footnote { margin: -7px 0 0; }
+@media (max-width: 800px) {
+  .admin-stat-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .admin-dashboard-grid { grid-template-columns: 1fr; }
+  .admin-panel { padding: 21px; }
+}
+@media (max-width: 460px) {
+  .admin-dashboard-heading { align-items: flex-start; flex-direction: column; }
+  .admin-dashboard-heading > .button { width: 100%; }
+  .admin-stat-grid { gap: 10px; }
+  .admin-stat-card { min-height: 108px; padding: 16px; }
+  .admin-panel { padding: 17px; }
+  .admin-panel-heading { align-items: flex-start; flex-direction: column; }
+  .admin-product-row { grid-template-columns: 28px minmax(0, 1fr); }
+  .admin-product-row b { grid-column: 2; }
+  .admin-alert { align-items: flex-start; flex-direction: column; }
+}
+
+.admin-section-notice { max-width: 860px; padding: 30px; border: 1px solid var(--line); border-radius: 22px; background: #fff; box-shadow: 0 14px 34px rgba(33,63,40,.05); }
+.admin-section-notice h2 { margin-bottom: 12px; font-size: clamp(26px, 3.4vw, 38px); }
+.admin-section-notice .detail-copy { max-width: 660px; margin: 0 0 22px; }
