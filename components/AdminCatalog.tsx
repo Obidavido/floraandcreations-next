@@ -1,7 +1,9 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { AdminPagination } from "@/components/AdminPagination";
 import { adminList, adminMediaUrl, adminRequest, type AdminPage } from "@/lib/admin-api";
 import { formatNaira } from "@/lib/api";
@@ -19,7 +21,9 @@ const stockOptions = ["in_stock", "made_to_order", "out_of_stock"];
 function showError(error: unknown) { return error instanceof Error ? error.message : "The request could not be completed."; }
 function asNumber(value: string | number | undefined) { const n = Number(value ?? 0); return Number.isFinite(n) ? n : 0; }
 
-export function AdminCatalog({ section }: { section: "products" | "categories" | "add-ons" | "delivery-zones" }) {
+export function AdminCatalog({ section, standalone }: { section: "products" | "categories" | "add-ons" | "delivery-zones"; standalone?: "new" | string }) {
+  const router = useRouter();
+  const isStandalone = Boolean(standalone);
   const [products, setProducts] = useState<ProductRow[]>([]);
   const [categories, setCategories] = useState<CategoryRow[]>([]);
   const [addOns, setAddOns] = useState<AddOnRow[]>([]);
@@ -33,7 +37,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
   const [pagination, setPagination] = useState<AdminPage<ProductRow>["pagination"] | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
 
-  const [editingProduct, setEditingProduct] = useState<string | null>(null);
+  const [editingProduct, setEditingProduct] = useState<string | null>(standalone === "new" ? "" : standalone || null);
   const [productForm, setProductForm] = useState<ProductFormState>(emptyProduct);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<ProductRow | null>(null);
@@ -77,6 +81,23 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
     return () => { active = false; };
   }, [section, refreshKey, query, page]);
 
+  useEffect(() => {
+    if (section !== "products" || !standalone || standalone === "new") return;
+    let active = true;
+    setSaving(true);
+    adminRequest<ProductRow>(`/admin/products/${encodeURIComponent(standalone)}`)
+      .then((detail) => {
+        if (!active) return;
+        setEditingProduct(String(detail.id));
+        setProductForm({ name: detail.name || "", description: detail.description || "", base_price: String(detail.base_price ?? ""), status: detail.status || "active", featured: detail.featured === true || Number(detail.featured) === 1, category_ids: (detail.category_ids || []).map(String) });
+        setSelectedProduct(detail);
+        setVariants(detail.variants || []);
+      })
+      .catch((detailError) => { if (active) setError(showError(detailError)); })
+      .finally(() => { if (active) setSaving(false); });
+    return () => { active = false; };
+  }, [section, standalone]);
+
   async function openProduct(product?: ProductRow) {
     setError(""); setNotice(""); setImageFiles([]); setVariants([]); setSelectedProduct(null); setEditingVariant(null);
     if (!product) { setEditingProduct(""); setProductForm(emptyProduct); return; }
@@ -101,6 +122,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
         const data = new FormData(); imageFiles.forEach((file) => data.append("images[]", file));
         await adminRequest(`/admin/products/${encodeURIComponent(id)}/images`, { method: "POST", body: data });
       }
+      if (isStandalone) { router.push("/admin/products"); return; }
       setNotice(editingProduct ? "Product changes saved." : "Product created."); setEditingProduct(null); setProductForm(emptyProduct); setImageFiles([]); setSelectedProduct(null); setRefreshKey((value) => value + 1);
     } catch (saveError) { setError(showError(saveError)); }
     finally { setSaving(false); }
@@ -174,15 +196,15 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
   return <div className="admin-resource-view">
     <div className="admin-resource-toolbar">
       <p className="detail-copy">{section === "products" ? "Manage products, prices, visibility, images and variants." : section === "categories" ? "Organize products by type and occasion." : section === "add-ons" ? "Manage optional gifts and extras offered at checkout." : "Set delivery areas and their fees."}</p>
-      {section === "products" ? <div className="admin-resource-actions"><input aria-label="Search products" className="admin-search-input" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Search products…" /><button className="button button-primary" type="button" onClick={() => void openProduct()}>Add product</button></div> : null}
+      {section === "products" && !isStandalone ? <div className="admin-resource-actions"><input aria-label="Search products" className="admin-search-input" value={query} onChange={(event) => { setQuery(event.target.value); setPage(1); }} placeholder="Search products…" /><Link className="button button-primary" href="/admin/products/new">Add product</Link></div> : null}
     </div>
-    {section === "products" && <AdminPagination pagination={pagination || null} onPageChange={setPage} />}
+    {section === "products" && !isStandalone && <AdminPagination pagination={pagination || null} onPageChange={setPage} />}
     {error && <p className="form-error admin-message" role="alert">{error}</p>}{notice && <p className="form-success admin-message" role="status">{notice}</p>}
     {loading && <p className="detail-copy" role="status">Loading {titles[section].toLowerCase()}…</p>}
 
     {section === "products" && <>
-      {(editingProduct !== null || (selectedProduct === null && productForm.name !== "")) && <section className="admin-panel admin-form-panel">
-        <div className="admin-panel-heading"><div><p className="eyebrow">Catalog</p><h3>{editingProduct ? "Edit product" : "New product"}</h3></div><button className="text-button" type="button" onClick={() => { setEditingProduct(null); setSelectedProduct(null); setProductForm(emptyProduct); setImageFiles([]); }}>Close</button></div>
+      {(isStandalone || editingProduct !== null || (selectedProduct === null && productForm.name !== "")) && <section className="admin-panel admin-form-panel">
+        <div className="admin-panel-heading"><div><p className="eyebrow">Catalog</p><h3>{editingProduct ? "Edit product" : "New product"}</h3></div><button className="text-button" type="button" onClick={() => isStandalone ? router.push("/admin/products") : (setEditingProduct(null), setSelectedProduct(null), setProductForm(emptyProduct), setImageFiles([]))}>{isStandalone ? "Back to products" : "Close"}</button></div>
         <form className="admin-form-grid" onSubmit={saveProduct}>
           <label>Product name<input required value={productForm.name} onChange={(event) => setProductForm({ ...productForm, name: event.target.value })} /></label>
           <label>Price (NGN)<input required min="0" step="0.01" type="number" value={productForm.base_price} onChange={(event) => setProductForm({ ...productForm, base_price: event.target.value })} /></label>
@@ -200,8 +222,8 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
           <form className="admin-form-grid admin-variant-form" onSubmit={saveVariant}><label>Size<input value={variantForm.size} onChange={(event) => setVariantForm({ ...variantForm, size: event.target.value })} /></label><label>Colour<input value={variantForm.color} onChange={(event) => setVariantForm({ ...variantForm, color: event.target.value })} /></label><label>Price<input required type="number" min="0" step="0.01" value={variantForm.price} onChange={(event) => setVariantForm({ ...variantForm, price: event.target.value })} /></label><label>Stock<select value={variantForm.stock_status} onChange={(event) => setVariantForm({ ...variantForm, stock_status: event.target.value })}>{stockOptions.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}</select></label><label>SKU (optional)<input value={variantForm.sku} onChange={(event) => setVariantForm({ ...variantForm, sku: event.target.value })} /></label><label className="admin-form-wide">Variant images<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple onChange={(event) => setVariantImageFiles(Array.from(event.target.files || []))} /><small>Images upload after the variant is saved.</small></label><div className="admin-form-actions"><button className="button button-secondary" type="submit" disabled={saving}>{saving ? "Saving…" : editingVariant ? "Update variant" : "Add variant"}</button>{editingVariant && <button className="text-button" type="button" onClick={() => { setEditingVariant(null); setVariantImageFiles([]); setVariantForm({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" }); }}>Cancel</button>}</div></form>
         </div>}
       </section>}
-      {!loading && products.length === 0 && <div className="admin-panel admin-empty-state"><h3>No products found</h3><p className="detail-copy">Create a product or adjust the search.</p><button className="button button-primary" type="button" onClick={() => { setProductForm({ ...emptyProduct }); setEditingProduct(""); }}>Add product</button></div>}
-      {products.length > 0 && <div className="admin-panel admin-table-panel"><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Product</th><th>Price</th><th>Status</th><th>Categories</th><th>Variants</th><th>Actions</th></tr></thead><tbody>{products.map((product) => <tr key={product.id}><td><div className="admin-product-cell">{product.thumbnail ? <Image src={adminMediaUrl(product.thumbnail)} alt="" width={42} height={42} sizes="42px" /> : <span className="admin-product-placeholder">F</span>}<span><strong>{product.name}</strong><small>{product.slug}</small></span></div></td><td>{formatNaira(asNumber(product.base_price))}</td><td><span className="admin-status-pill">{product.status || "active"}{product.featured === true || Number(product.featured) === 1 ? " · featured" : ""}</span></td><td>{product.category_count ?? "—"}</td><td>{product.variant_count ?? "—"}</td><td><button className="text-button" type="button" onClick={() => void openProduct(product)}>Edit</button> <button className="text-button account-delete-button" type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}</tbody></table></div></div>}
+      {!isStandalone && !loading && products.length === 0 && <div className="admin-panel admin-empty-state"><h3>No products found</h3><p className="detail-copy">Create a product or adjust the search.</p><Link className="button button-primary" href="/admin/products/new">Add product</Link></div>}
+      {!isStandalone && products.length > 0 && <div className="admin-panel admin-table-panel"><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Product</th><th>Price</th><th>Status</th><th>Categories</th><th>Variants</th><th>Actions</th></tr></thead><tbody>{products.map((product) => <tr key={product.id}><td><div className="admin-product-cell">{product.thumbnail ? <Image src={adminMediaUrl(product.thumbnail)} alt="" width={42} height={42} sizes="42px" /> : <span className="admin-product-placeholder">F</span>}<span><strong>{product.name}</strong><small>{product.slug}</small></span></div></td><td>{formatNaira(asNumber(product.base_price))}</td><td><span className="admin-status-pill">{product.status || "active"}{product.featured === true || Number(product.featured) === 1 ? " · featured" : ""}</span></td><td>{product.category_count ?? "—"}</td><td>{product.variant_count ?? "—"}</td><td><Link className="text-button" href={`/admin/products/${product.id}/edit`}>Edit</Link> <button className="text-button account-delete-button" type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}</tbody></table></div></div>}
     </>}
 
     {section !== "products" && <div className="admin-catalog-layout">

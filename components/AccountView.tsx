@@ -1,14 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { readStoredUser } from "@/components/AuthForm";
 import { accountRequest, type AccountOrder, type Paginated } from "@/lib/account-api";
 import { formatNaira, type AuthUser } from "@/lib/api";
 
 export function AccountView() {
-  const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [orders, setOrders] = useState<AccountOrder[]>([]);
   const [ready, setReady] = useState(false);
@@ -39,19 +37,12 @@ export function AccountView() {
     return () => { active = false; };
   }, []);
 
-  function signOut() {
-    window.localStorage.removeItem("fc.token.v1");
-    window.localStorage.removeItem("fc.user.v1");
-    router.replace("/login");
-  }
-
   if (!ready) return <div className="account-loading" aria-busy="true"><p>Checking your account…</p></div>;
   if (!user) return <div className="account-guest-card"><p className="eyebrow">Your account</p><h1>Sign in to continue.</h1><p className="detail-copy">View orders, save delivery details, manage your wishlist and update your profile.</p><Link className="button button-primary" href="/login?redirect=%2Faccount">Sign in to your account</Link></div>;
 
   return <div className="account-dashboard">
     <header className="account-dashboard-heading">
       <div><p className="eyebrow">Your account</p><h1>Hello{user.name ? `, ${user.name.split(" ")[0]}` : " there"}.</h1><p className="detail-copy">{user.email || "Your account is ready for the next beautiful delivery."}</p></div>
-      <button className="button button-secondary" type="button" onClick={signOut}>Sign out</button>
     </header>
 
     <nav className="account-links" aria-label="Account sections">
