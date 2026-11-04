@@ -20,7 +20,7 @@ export function AccountShell({ title, description, children }: { title: string; 
       <nav className="account-sidebar" aria-label="Account sections">
         {links.map(([href, label]) => <Link href={href} key={href}>{label}</Link>)}
       </nav>
-      <main className="account-management-content">{children}</main>
+      <div className="account-management-content">{children}</div>
     </div>
   </div>;
 }
