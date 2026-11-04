@@ -84,6 +84,9 @@ export function AdminAccess() {
   const topProducts = summary?.top_products || [];
   const orderStatuses = summary?.order_status_counts || [];
   const paymentStatuses = summary?.payment_status_counts || [];
+  const isStaff = admin.role?.toLowerCase() === "staff";
+  const workspaceModules = [['/admin/products', 'Products', 'Catalog, images and variants'], ['/admin/categories', 'Categories', 'Product types and occasions'], ['/admin/add-ons', 'Gift add-ons', 'Checkout extras and pricing'], ['/admin/delivery-zones', 'Delivery zones', 'Areas and delivery fees'], ['/admin/customers', 'Customers', 'Accounts and order history'], ['/admin/staff', 'Staff access', 'Administrator and staff accounts'], ['/admin/activity-logs', 'Activity logs', 'Audit trail of admin actions'], ['/admin/settings', 'Store settings', 'Business configuration and password']] as const;
+  const visibleWorkspaceModules = isStaff ? workspaceModules.filter(([href]) => href === "/admin/products" || href === "/admin/customers") : workspaceModules;
 
   return <div className="admin-dashboard">
     <div className="admin-dashboard-heading">
@@ -134,7 +137,7 @@ export function AdminAccess() {
       <section className="admin-panel admin-module-links">
         <div className="admin-panel-heading"><div><p className="eyebrow">Workspace</p><h3>Manage the store</h3></div></div>
         <div className="admin-module-link-grid">
-          {[['/admin/products', 'Products', 'Catalog, images and variants'], ['/admin/categories', 'Categories', 'Product types and occasions'], ['/admin/add-ons', 'Gift add-ons', 'Checkout extras and pricing'], ['/admin/delivery-zones', 'Delivery zones', 'Areas and delivery fees'], ['/admin/customers', 'Customers', 'Accounts and order history'], ['/admin/staff', 'Staff access', 'Administrator and staff accounts'], ['/admin/activity-logs', 'Activity logs', 'Audit trail of admin actions'], ['/admin/settings', 'Store settings', 'Business configuration and password']].map(([href, title, description]) => <Link className="admin-module-link" href={href} key={href}><strong>{title}</strong><span>{description}</span></Link>)}
+          {visibleWorkspaceModules.map(([href, title, description]) => <Link className="admin-module-link" href={href} key={href}><strong>{title}</strong><span>{description}</span></Link>)}
         </div>
       </section>
       {summary.revenue && <p className="admin-footnote">Revenue snapshot: this week {formatNaira(asNumber(summary.revenue.revenue_this_week))} · this month {formatNaira(asNumber(summary.revenue.revenue_this_month))}. Figures are supplied by the protected admin API.</p>}
