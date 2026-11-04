@@ -1,0 +1,31 @@
+# Dependencies and build output
+node_modules/
+.pnp
+.pnp.*
+.next/
+out/
+build/
+dist/
+
+# Local environment values (keep placeholders only in .env.example)
+.env
+.env.*
+!.env.example
+
+# Vercel local state
+.vercel/
+
+# PHP backend and private cPanel data must stay off GitHub
+/api/
+/config/config.php
+/api/error_log
+/api/assets/uploads/
+/uploads/payment-proof/
+/uploads/payment-proofs/
+**/payment-proof/
+**/payment-proofs/
+**/*payment-proof*
+
+# Logs and local editor files
+*.log
+.DS_Store
