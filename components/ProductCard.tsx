@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Product } from "@/lib/types";
 import { formatNaira } from "@/lib/api";
+import { AddToCartButton } from "@/components/AddToCartButton";
 
 export function ProductCard({ product }: { product: Product }) {
   return (
@@ -16,6 +17,7 @@ export function ProductCard({ product }: { product: Product }) {
         </div>
         <p className="price">{formatNaira(product.price)}</p>
       </div>
+      <AddToCartButton product={product} />
       <Link className="text-link" href={`/products/${product.slug}`}>View arrangement <span aria-hidden="true">↗</span></Link>
     </article>
   );

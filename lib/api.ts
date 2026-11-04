@@ -1,5 +1,8 @@
 import type { Category, Product } from "./types";
 
+export type AuthUser = { id?: string | number; name?: string; email?: string; phone?: string };
+export type AuthResult = { token?: string; user?: AuthUser; message?: string };
+
 const baseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL || "/api").replace(/\/$/, "");
 const fallbackImage = "/hero-bouquet.webp";
 
@@ -47,6 +50,24 @@ async function request<T>(path: string, init?: RequestInit): Promise<T | null> {
     return null;
   }
 }
+
+async function authenticate(path: string, payload: Record<string, string>): Promise<AuthResult> {
+  try {
+    const response = await fetch(absoluteUrl(path), { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+    const body = await response.json().catch(() => ({})) as Record<string, unknown>;
+    if (!response.ok) throw new Error(typeof body.message === "string" ? body.message : "The details could not be accepted. Please check them and try again.");
+    const data = (body.data && typeof body.data === "object" ? body.data : body) as Record<string, unknown>;
+    const token = typeof data.token === "string" ? data.token : typeof data.access_token === "string" ? data.access_token : undefined;
+    const user = data.user && typeof data.user === "object" ? data.user as AuthUser : undefined;
+    return { token, user, message: typeof body.message === "string" ? body.message : undefined };
+  } catch (error) {
+    if (error instanceof Error && error.message !== "Failed to fetch") throw error;
+    throw new Error("We could not reach the account service. Please try again shortly.");
+  }
+}
+
+export function signIn(payload: Record<string, string>) { return authenticate("/login", payload); }
+export function registerUser(payload: Record<string, string>) { return authenticate("/register", payload); }
 
 function unwrap<T>(value: T | { data?: T; products?: T; categories?: T }): T {
   if (value && typeof value === "object") {
