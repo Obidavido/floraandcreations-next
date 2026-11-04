@@ -1,11 +1,12 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import Image from "next/image";
 import { AdminPagination } from "@/components/AdminPagination";
 import { adminList, adminMediaUrl, adminRequest, type AdminPage } from "@/lib/admin-api";
 import { formatNaira } from "@/lib/api";
 
-type ProductRow = { id: string | number; name: string; slug?: string; description?: string; base_price?: string | number; status?: string; featured?: boolean | number; thumbnail?: string; category_count?: number; variant_count?: number; category_ids?: Array<string | number>; images?: Array<{ image_url?: string }>; variants?: VariantRow[] };
+type ProductRow = { id: string | number; name: string; slug?: string; description?: string; base_price?: string | number; status?: string; featured?: boolean | number; thumbnail?: string; category_count?: number; variant_count?: number; category_ids?: Array<string | number>; images?: Array<{ id?: string | number; image_url?: string }>; variants?: VariantRow[] };
 type CategoryRow = { id: string | number; name: string; slug?: string; type: string; product_count?: number };
 type AddOnRow = { id: string | number; name: string; price: string | number; type?: string; active?: boolean | number };
 type ZoneRow = { id: string | number; area_name: string; fee: string | number };
@@ -52,7 +53,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
     const load = async () => {
       try {
         if (section === "products") {
-          const params = new URLSearchParams({ page: String(page), per_page: "100" });
+          const params = new URLSearchParams({ page: String(page), per_page: "12" });
           if (query.trim()) params.set("search", query.trim());
           const [productData, categoryData] = await Promise.all([
             adminRequest<AdminPage<ProductRow> | ProductRow[]>(`/admin/products?${params}`),
@@ -189,7 +190,8 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
           <label>Status<select value={productForm.status} onChange={(event) => setProductForm({ ...productForm, status: event.target.value })}><option value="active">Active</option><option value="draft">Draft</option><option value="archived">Archived</option></select></label>
           <label className="admin-check-label"><input type="checkbox" checked={productForm.featured} onChange={(event) => setProductForm({ ...productForm, featured: event.target.checked })} /> Featured product</label>
           <fieldset className="admin-form-wide admin-checkbox-group"><legend>Product categories and occasions</legend>{categories.map((category) => <label key={category.id}><input type="checkbox" checked={productForm.category_ids.includes(String(category.id))} onChange={(event) => setProductForm({ ...productForm, category_ids: event.target.checked ? [...productForm.category_ids, String(category.id)] : productForm.category_ids.filter((id) => id !== String(category.id)) })} /> {category.name} <small>({category.type.replaceAll("_", " ")})</small></label>)}{categories.length === 0 && <p className="detail-copy">Create a product category first.</p>}</fieldset>
-          <label className="admin-form-wide">Add product images<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple onChange={(event) => setImageFiles(Array.from(event.target.files || []))} /><small>Images are uploaded after saving the product. Existing images remain in place.</small></label>
+          {selectedProduct?.images?.length ? <div className="admin-form-wide admin-existing-images"><p>Current product images</p><div>{selectedProduct.images.map((image, index) => image.image_url ? <Image key={image.id || image.image_url} src={adminMediaUrl(image.image_url)} alt={`${selectedProduct.name} image ${index + 1}`} width={72} height={72} sizes="72px" /> : null)}</div></div> : null}
+          <label className="admin-form-wide">Add product images<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple onChange={(event) => setImageFiles(Array.from(event.target.files || []))} /><small>New images are optimized to WebP by Next during delivery. Existing images remain in place.</small></label>
           <div className="admin-form-actions admin-form-wide"><button className="button button-primary" type="submit" disabled={saving}>{saving ? "Saving…" : editingProduct ? "Save product" : "Create product"}</button>{editingProduct && <button className="button button-secondary" type="button" onClick={() => { setEditingProduct(null); setSelectedProduct(null); setProductForm(emptyProduct); }}>Cancel</button>}</div>
         </form>
         {editingProduct && selectedProduct && <div className="admin-variant-manager">
@@ -199,7 +201,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
         </div>}
       </section>}
       {!loading && products.length === 0 && <div className="admin-panel admin-empty-state"><h3>No products found</h3><p className="detail-copy">Create a product or adjust the search.</p><button className="button button-primary" type="button" onClick={() => { setProductForm({ ...emptyProduct }); setEditingProduct(""); }}>Add product</button></div>}
-      {products.length > 0 && <div className="admin-panel admin-table-panel"><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Product</th><th>Price</th><th>Status</th><th>Categories</th><th>Variants</th><th>Actions</th></tr></thead><tbody>{products.map((product) => <tr key={product.id}><td><div className="admin-product-cell">{product.thumbnail ? <img src={adminMediaUrl(product.thumbnail)} alt="" /> : <span className="admin-product-placeholder">F</span>}<span><strong>{product.name}</strong><small>{product.slug}</small></span></div></td><td>{formatNaira(asNumber(product.base_price))}</td><td><span className="admin-status-pill">{product.status || "active"}{product.featured === true || Number(product.featured) === 1 ? " · featured" : ""}</span></td><td>{product.category_count ?? "—"}</td><td>{product.variant_count ?? "—"}</td><td><button className="text-button" type="button" onClick={() => void openProduct(product)}>Edit</button> <button className="text-button account-delete-button" type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}</tbody></table></div></div>}
+      {products.length > 0 && <div className="admin-panel admin-table-panel"><div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Product</th><th>Price</th><th>Status</th><th>Categories</th><th>Variants</th><th>Actions</th></tr></thead><tbody>{products.map((product) => <tr key={product.id}><td><div className="admin-product-cell">{product.thumbnail ? <Image src={adminMediaUrl(product.thumbnail)} alt="" width={42} height={42} sizes="42px" /> : <span className="admin-product-placeholder">F</span>}<span><strong>{product.name}</strong><small>{product.slug}</small></span></div></td><td>{formatNaira(asNumber(product.base_price))}</td><td><span className="admin-status-pill">{product.status || "active"}{product.featured === true || Number(product.featured) === 1 ? " · featured" : ""}</span></td><td>{product.category_count ?? "—"}</td><td>{product.variant_count ?? "—"}</td><td><button className="text-button" type="button" onClick={() => void openProduct(product)}>Edit</button> <button className="text-button account-delete-button" type="button" onClick={() => void deleteProduct(product)}>Delete</button></td></tr>)}</tbody></table></div></div>}
     </>}
 
     {section !== "products" && <div className="admin-catalog-layout">
