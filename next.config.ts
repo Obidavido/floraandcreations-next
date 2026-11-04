@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
     formats: ["image/webp"],
     remotePatterns: [
       { protocol: "https", hostname: "api.floraandcreations.com", pathname: "/api/assets/uploads/**" },
+      { protocol: "https", hostname: "api.floraandcreations.com", pathname: "/assets/uploads/**" },
       { protocol: "https", hostname: "floraandcreations.com", pathname: "/api/assets/uploads/**" },
       { protocol: "https", hostname: "www.floraandcreations.com", pathname: "/api/assets/uploads/**" }
     ]

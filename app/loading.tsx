@@ -1,1 +1,0 @@
-export default function Loading() { return <div className="section container"><div className="empty-state"><p className="eyebrow">Flora and Creations</p><h1>Preparing something beautiful…</h1></div></div>; }
