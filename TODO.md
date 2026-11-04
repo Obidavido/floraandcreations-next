@@ -6,6 +6,7 @@
 - [ ] Restore the supplied hero, logo, and favicon assets in `public/` without touching PHP uploads.
 - [x] Global icon-only WhatsApp control added with both approved business numbers.
 - [x] Cart phase: persistent browser cart state, live header count, add-to-cart controls, quantity changes, item removal, subtotal, and checkout link.
+- [x] Authentication phase: login and registration forms, token/user persistence, redirect handling, API error states, authenticated account view, and sign out. Live API contract and Preview verification remain open.
 - [x] Vercel rewrite, environment template, GitHub Actions checks, and deployment README added.
 - [x] Connect the approved public GitHub repository, push a feature branch, and open a PR against `main`.
 - [ ] Install dependencies, run typecheck/build, resolve diagnostics, and verify Preview. Local dependency installation, typecheck, and production build pass; Preview verification remains open.
