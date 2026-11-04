@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ReactNode, useEffect, useState } from "react";
+import { FiBarChart2, FiBox, FiGrid, FiMoreHorizontal, FiShoppingBag } from "react-icons/fi";
+import type { IconType } from "react-icons";
 import type { AuthUser } from "@/lib/api";
 
 const links = [
@@ -17,6 +19,7 @@ const links = [
   ["/admin/activity-logs", "Activity logs"],
   ["/admin/settings", "Settings"]
 ] as const;
+const mobileIcons: Record<string, IconType> = { "/admin": FiBarChart2, "/admin/orders": FiShoppingBag, "/admin/products": FiBox, "/admin/categories": FiGrid };
 
 export function AdminShell({ title, description, children }: { title: string; description: string; children: ReactNode }) {
   const pathname = usePathname();
@@ -67,8 +70,8 @@ export function AdminShell({ title, description, children }: { title: string; de
         {links.map(([href, label]) => <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)) ? "active" : ""}>{label}</Link>)}
       </nav>
       <nav className="dashboard-mobile-tabs" aria-label="Mobile administration sections">
-        {links.slice(0, 4).map(([href, label]) => <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)) ? "active" : ""}>{label}</Link>)}
-        <button type="button" className={mobileMoreOpen ? "active" : ""} aria-expanded={mobileMoreOpen} onClick={() => setMobileMoreOpen((open) => !open)}>More</button>
+        {links.slice(0, 4).map(([href, label]) => { const Icon = mobileIcons[href]; return <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)) ? "active" : ""}><Icon aria-hidden="true" /><span>{label}</span></Link>; })}
+        <button type="button" className={mobileMoreOpen ? "active" : ""} aria-expanded={mobileMoreOpen} onClick={() => setMobileMoreOpen((open) => !open)}><FiMoreHorizontal aria-hidden="true" /><span>More</span></button>
       </nav>
       {mobileMoreOpen && <div className="dashboard-mobile-more"><p className="eyebrow">More admin sections</p>{links.slice(4).map(([href, label]) => <Link key={href} href={href} onClick={() => setMobileMoreOpen(false)} className={pathname === href || pathname.startsWith(`${href}/`) ? "active" : ""}>{label}</Link>)}</div>}
       <main className="admin-management-content">{children}</main>

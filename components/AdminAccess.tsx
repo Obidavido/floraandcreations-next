@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatNaira, getAdminSummary, type AdminSummary, type AuthUser } from "@/lib/api";
+import { adminRequest } from "@/lib/admin-api";
 
 const TOKEN_KEY = "fc.token.v1";
 const USER_KEY = "fc.user.v1";
@@ -19,6 +20,7 @@ function formatStatus(value?: string) {
 export function AdminAccess() {
   const [admin, setAdmin] = useState<AuthUser | null>(null);
   const [summary, setSummary] = useState<AdminSummary | null>(null);
+  const [totalProducts, setTotalProducts] = useState<number | null>(null);
   const [ready, setReady] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -59,6 +61,9 @@ export function AdminAccess() {
         }
       })
       .finally(() => { if (active) setLoading(false); });
+    adminRequest<{ pagination?: { total?: number }; data?: unknown[] } | unknown[]>("/admin/products?page=1&per_page=1")
+      .then((data) => { if (!active) return; const total = Array.isArray(data) ? data.length : data.pagination?.total ?? data.data?.length; if (typeof total === "number") setTotalProducts(total); })
+      .catch(() => undefined);
 
     return () => { active = false; };
   }, [refreshKey]);
@@ -97,6 +102,7 @@ export function AdminAccess() {
         <article className="admin-stat-card"><span>Revenue today</span><strong>{formatNaira(asNumber(summary.revenue?.revenue_today))}</strong></article>
         <article className="admin-stat-card"><span>Orders</span><strong>{asNumber(summary.total_orders).toLocaleString("en-NG")}</strong><small>All time</small></article>
         <article className="admin-stat-card"><span>Customers</span><strong>{asNumber(summary.total_customers).toLocaleString("en-NG")}</strong><small>Registered</small></article>
+        <article className="admin-stat-card"><span>Total products</span><strong>{totalProducts === null ? "—" : totalProducts.toLocaleString("en-NG")}</strong><small>Catalog items</small></article>
         <article className="admin-stat-card"><span>Payment checks</span><strong>{asNumber(summary.pending_verification).toLocaleString("en-NG")}</strong><small>Awaiting review</small></article>
         <article className="admin-stat-card"><span>To fulfill</span><strong>{asNumber(summary.pending_fulfillment).toLocaleString("en-NG")}</strong><small>Active orders</small></article>
         <article className="admin-stat-card"><span>Scheduled today</span><strong>{asNumber(summary.today_scheduled).toLocaleString("en-NG")}</strong><small>Not cancelled</small></article>
