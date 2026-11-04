@@ -63,14 +63,6 @@ export function AdminAccess() {
     return () => { active = false; };
   }, [refreshKey]);
 
-  function signOut() {
-    window.localStorage.removeItem(TOKEN_KEY);
-    window.localStorage.removeItem(USER_KEY);
-    setAdmin(null);
-    setSummary(null);
-    setError("");
-  }
-
   if (!ready) return <div className="admin-workspace-card" aria-busy="true"><p className="detail-copy">Checking admin access…</p></div>;
 
   if (!admin) return <div className="admin-workspace-card">
@@ -93,7 +85,6 @@ export function AdminAccess() {
         <h2>Welcome{admin.name ? `, ${admin.name.split(" ")[0]}` : " back"}.</h2>
         <p className="detail-copy">{admin.email || "Signed in"} <span className="admin-role-pill">{admin.role}</span></p>
       </div>
-      <button className="button button-secondary" type="button" onClick={signOut}>Sign out</button>
     </div>
 
     {error && <div className="admin-alert" role="alert"><span>{error}</span><button className="text-button" type="button" onClick={() => setRefreshKey((key) => key + 1)}>Try again</button></div>}
