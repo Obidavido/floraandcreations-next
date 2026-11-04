@@ -11,7 +11,8 @@ export default function AdminLoginPage() { return <>
     </div>
   </header>
   <section className="section container admin-login-section">
-    <div className="auth-card">
+    <div className="auth-card admin-login-gate">
+      <div className="admin-login-gate-copy"><p className="eyebrow">Private workspace gate</p><h2>Team access only</h2><p>Choose your access level and confirm that you are an approved team member. Your account permissions remain the final authority.</p></div>
       <Suspense fallback={<div className="form-card"><p>Loading sign in…</p></div>}><AuthForm mode="admin" /></Suspense>
     </div>
   </section>
