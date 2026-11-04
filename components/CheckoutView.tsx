@@ -166,7 +166,11 @@ export function CheckoutView() {
         }
       }
       if (!hasAccount) {
-        window.sessionStorage.setItem(`fc.guest-contact.${orderId}`, JSON.stringify({ email: customer.email, phone: customer.phone }));
+        try {
+          window.sessionStorage.setItem(`fc.guest-contact.${orderId}`, JSON.stringify({ email: customer.email, phone: customer.phone }));
+        } catch {
+          // Guest order lookup can still be completed by entering the contact details on the order page.
+        }
       }
       clearCart();
       router.push(`/order/${encodeURIComponent(String(orderId))}`);
