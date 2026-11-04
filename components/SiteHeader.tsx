@@ -9,7 +9,7 @@ export function SiteHeader() {
     <header className="site-header">
       <div className="site-status">Open Now · Abuja Delivery · Mon–Sat · 9:00 – 18:00</div>
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="Flora and Creations home"><span className="brand-mark">Flora <em>&amp;</em> Creations</span></Link>
+        <Link href="/" className="brand" aria-label="Flora and Creations home"><img src="/images/flora-logo.png" alt="Flora & Creations" width={305} height={40} /></Link>
         <nav className="main-nav" aria-label="Main navigation">
           <Link href="/shop">Shop</Link>
           <Link href="/about">About</Link>

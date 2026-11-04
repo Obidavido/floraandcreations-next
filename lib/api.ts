@@ -4,7 +4,21 @@ export type AuthUser = { id?: string | number; name?: string; email?: string; ph
 export type AuthResult = { token?: string; user?: AuthUser; message?: string };
 
 const baseUrl = (process.env.NEXT_PUBLIC_API_BASE_URL || "/api").replace(/\/$/, "");
-const fallbackImage = "/hero-bouquet.webp";
+const fallbackImage = "/images/flora-og.png";
+
+function normalizeProductImage(image: unknown) {
+  if (typeof image !== "string" || !image.trim()) return fallbackImage;
+  const value = image.trim();
+  if (/^https?:\/\//i.test(value)) return value;
+  if (value.startsWith("/api/")) return value;
+  if (value.startsWith("/assets/")) return `/api${value}`;
+  if (value.startsWith("assets/")) return `/api/${value}`;
+  return value.startsWith("/") ? value : `/${value}`;
+}
+
+function normalizeProducts(products: Product[]) {
+  return products.map((product) => ({ ...product, image: normalizeProductImage(product.image) }));
+}
 
 export const referenceProducts: Product[] = [
   { id: "1", slug: "50-stems-premium-red-roses", name: "50 Stems Premium Red Roses", description: "A generous statement bouquet of premium red roses, arranged with care.", price: 125000, category: "Roses", image: fallbackImage, featured: true },
@@ -80,14 +94,14 @@ function unwrap<T>(value: T | { data?: T; products?: T; categories?: T }): T {
 export async function getProducts(): Promise<Product[]> {
   const response = await request<Product[] | { data?: Product[]; products?: Product[] }>("/products");
   const value = unwrap(response || []);
-  return Array.isArray(value) && value.length ? value : referenceProducts;
+  return Array.isArray(value) && value.length ? normalizeProducts(value) : referenceProducts;
 }
 
 export async function getProduct(slug: string): Promise<Product | null> {
   const local = referenceProducts.find((product) => product.slug === slug);
   const response = await request<Product | { data?: Product }>(`/products/${encodeURIComponent(slug)}`);
   const remote = response ? unwrap(response) : null;
-  return (remote && !Array.isArray(remote) ? remote : local) || null;
+  return remote && !Array.isArray(remote) ? { ...remote, image: normalizeProductImage(remote.image) } : local || null;
 }
 
 export async function getCategories(): Promise<Category[]> {
