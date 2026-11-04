@@ -9,9 +9,11 @@ button, input, textarea, select { font: inherit; }
 button { cursor: pointer; }
 .container { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
 .site-header { position: sticky; top: 0; z-index: 20; background: rgba(248,246,240,.94); backdrop-filter: blur(14px); border-bottom: 1px solid rgba(63,93,69,.12); }
+.site-status { padding: 8px 16px; background: var(--green); color: white; text-align: center; font-size: 11px; letter-spacing: .04em; }
 .header-inner { min-height: 88px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
-.brand { display: block; width: 116px; }
-.brand img { display: block; width: 100%; height: auto; object-fit: contain; }
+.brand { display: block; width: 160px; }
+.brand-mark { display: block; color: var(--green); font-family: var(--font-jakarta), Arial, sans-serif; font-size: 17px; font-weight: 800; letter-spacing: -.06em; line-height: 1.05; }
+.brand-mark em { font-family: Georgia, serif; font-weight: 400; }
 .main-nav, .header-actions { display: flex; align-items: center; gap: 22px; font-size: 13px; font-weight: 700; }
 .main-nav a, .header-actions a { opacity: .78; transition: opacity .2s ease, color .2s ease; }
 .main-nav a:hover, .header-actions a:hover { color: var(--green); opacity: 1; }
@@ -30,6 +32,12 @@ p { line-height: 1.75; }
 .hero-media { position: relative; min-height: 470px; }
 .hero-media::before { content: ""; position: absolute; inset: 30px 10px 0 60px; border-radius: 44% 44% 10px 10px; background: #dce7d9; transform: rotate(4deg); }
 .hero-media img { position: relative; display: block; width: 100%; height: 520px; object-fit: cover; border-radius: 45% 45% 10px 10px; box-shadow: 0 24px 60px rgba(33,63,40,.16); }
+.legacy-hero { padding: 72px 0 62px; background: #edf2eb; }
+.legacy-hero h1 { max-width: 780px; font-size: clamp(42px, 6vw, 76px); }
+.legacy-hero .lede { max-width: 650px; }
+.legacy-hero-compact { padding: 52px 0 44px; }
+.legacy-hero-compact h1 { font-size: clamp(36px, 5vw, 62px); }
+.shop-home-section { padding-top: 64px; }
 .button { display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 99px; padding: 14px 23px; font-size: 13px; font-weight: 800; transition: transform .2s ease, background .2s ease, color .2s ease; }
 .button:hover { transform: translateY(-2px); }
 .button-primary { color: white; background: var(--green); }
@@ -55,6 +63,20 @@ p { line-height: 1.75; }
 .promise-grid span { opacity: .72; font-size: 12px; }
 .category-pills { display: flex; flex-wrap: wrap; gap: 10px; }
 .category-pill { border: 1px solid var(--line); background: white; border-radius: 99px; padding: 11px 16px; color: var(--green); font-size: 12px; font-weight: 800; }
+.category-pill-active, .category-pill:hover { background: var(--green); color: white; border-color: var(--green); }
+.shop-meta { display: flex; justify-content: space-between; align-items: center; gap: 18px; margin: 30px 0 22px; color: var(--muted); font-size: 12px; }
+.shop-meta label { display: flex; align-items: center; gap: 8px; }
+.shop-meta select { border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; background: white; color: var(--ink); }
+.gift-panel { padding: 32px; border: 1px solid var(--line); border-radius: 24px; background: white; }
+.gift-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.gift-card { display: grid; gap: 8px; min-height: 86px; padding: 16px; border-radius: 14px; background: var(--sage); }
+.gift-card strong { font-size: 13px; }
+.gift-card span { color: var(--green); font-size: 13px; font-weight: 800; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 18px; margin-top: 34px; }
+.pager > span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--green); color: white; font-size: 12px; }
+.whatsapp-cta { display: flex; justify-content: space-between; align-items: center; gap: 30px; padding: 34px; border-radius: 24px; background: var(--sage); }
+.whatsapp-cta h2 { max-width: 620px; margin-bottom: 10px; }
+.whatsapp-cta p:not(.eyebrow) { max-width: 620px; margin: 0; color: var(--muted); }
 .soft-panel { background: var(--sage); border-radius: 28px; padding: 38px; }
 .page-hero { padding: 70px 0 48px; background: #edf2eb; }
 .page-hero h1 { font-size: clamp(38px, 6vw, 68px); max-width: 760px; }
@@ -114,5 +136,5 @@ p { line-height: 1.75; }
 .account-links .soft-panel:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(33,63,40,.08); }
 .account-links span { color: var(--muted); font-size: 13px; }
 .admin-bar { background: #1c2a20; color: white; padding: 9px 0; font-size: 12px; }
-@media (max-width: 800px) { .main-nav { display: none; } .header-inner { min-height: 76px; } .header-actions { gap: 12px; font-size: 11px; } .account-link { padding: 8px 11px; } .hero { padding: 44px 0 64px; } .hero-grid, .detail-grid, .contact-grid, .cart-layout { grid-template-columns: 1fr; gap: 34px; } .hero-media { min-height: 320px; } .hero-media img { height: 360px; } .product-grid { grid-template-columns: repeat(2, 1fr); gap: 22px 13px; } .promise-grid { grid-template-columns: 1fr; gap: 12px; } .footer-grid { grid-template-columns: 1fr; gap: 22px; } .footer-bottom { gap: 12px; flex-direction: column; } .section { padding: 60px 0; } .soft-panel { padding: 26px; } .cart-summary { position: static; } .account-links { grid-template-columns: 1fr; } }
+@media (max-width: 800px) { .main-nav { display: none; } .header-inner { min-height: 76px; } .header-actions { gap: 12px; font-size: 11px; } .account-link { padding: 8px 11px; } .hero { padding: 44px 0 64px; } .hero-grid, .detail-grid, .contact-grid, .cart-layout { grid-template-columns: 1fr; gap: 34px; } .hero-media { min-height: 320px; } .hero-media img { height: 360px; } .product-grid { grid-template-columns: repeat(2, 1fr); gap: 22px 13px; } .promise-grid { grid-template-columns: 1fr; gap: 12px; } .footer-grid { grid-template-columns: 1fr; gap: 22px; } .footer-bottom { gap: 12px; flex-direction: column; } .section { padding: 60px 0; } .soft-panel { padding: 26px; } .cart-summary { position: static; } .account-links { grid-template-columns: 1fr; } .gift-grid { grid-template-columns: repeat(2, 1fr); } .shop-meta, .whatsapp-cta { align-items: flex-start; flex-direction: column; } }
 @media (max-width: 460px) { .container { width: min(100% - 28px, 1180px); } .brand { width: 92px; } .header-actions a:first-child { display: none; } .product-grid { grid-template-columns: 1fr 1fr; } h1 { font-size: 44px; } }

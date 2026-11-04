@@ -1,17 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useCart } from "@/components/CartProvider";
 
 export function SiteHeader() {
   const { itemCount } = useCart();
   return (
     <header className="site-header">
+      <div className="site-status">Open Now · Abuja Delivery · Mon–Sat · 9:00 – 18:00</div>
       <div className="container header-inner">
-        <Link href="/" className="brand" aria-label="Flora and Creations home">
-          <Image src="/flora-logo.webp" alt="Flora and Creations" width={116} height={78} priority />
-        </Link>
+        <Link href="/" className="brand" aria-label="Flora and Creations home"><span className="brand-mark">Flora <em>&amp;</em> Creations</span></Link>
         <nav className="main-nav" aria-label="Main navigation">
           <Link href="/shop">Shop</Link>
           <Link href="/about">About</Link>

@@ -6,23 +6,24 @@ export function SiteFooter() {
     <footer className="site-footer">
       <div className="container footer-grid">
         <div>
-          <p className="eyebrow">Flora and Creations</p>
-          <h2>Thoughtful flowers for meaningful moments.</h2>
-          <p className="muted">Handcrafted bouquets, gift boxes, chocolates and wines delivered across Abuja.</p>
+          <p className="eyebrow">Flora &amp; Creations</p>
+          <h2>Handcrafted bouquets and gifts, made with heart in Abuja.</h2>
+          <p className="muted">Delivered with care to your loved ones.</p>
         </div>
         <div>
-          <p className="footer-heading">Explore</p>
-          <Link href="/shop">Shop bouquets</Link>
-          <Link href="/about">Our story</Link>
-          <Link href="/faq">FAQs</Link>
-          <Link href="/contact">Contact us</Link>
+          <p className="footer-heading">Quick Links</p>
+          <Link href="/shop">Shop</Link>
+          <Link href="/about">About</Link>
+          <Link href="/contact">Contact</Link>
+          <Link href="/faq">FAQ / Delivery</Link>
         </div>
         <div>
-          <p className="footer-heading">Visit or enquire</p>
+          <p className="footer-heading">Contact Us</p>
           <p className="muted">{BUSINESS_ADDRESS}</p>
           <p className="muted">Abuja, Nigeria</p>
-          <a href="mailto:orders@floraandcreations.com">orders@floraandcreations.com</a>
-          <a href="tel:+2347031677165">+234 703 167 7165</a>
+          <a href="mailto:hello@floraandcreations.com">hello@floraandcreations.com</a>
+          <a href="tel:+2347031677165">07031677165 / 08037033240</a>
+          <a href="https://instagram.com/floracreations" target="_blank" rel="noreferrer">@floraandcreations</a>
         </div>
       </div>
       <div className="container footer-bottom">
