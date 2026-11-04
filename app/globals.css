@@ -457,6 +457,17 @@ p { line-height: 1.75; }
 .admin-management .text-button { padding: 4px 2px; border: 0; background: none; color: var(--green); font: inherit; font-size: 11px; font-weight: 800; cursor: pointer; }
 .admin-management .text-button:hover { text-decoration: underline; }
 .admin-management button:disabled { cursor: wait; opacity: .65; }
+.admin-login-gate { display: grid; gap: 22px; }
+.admin-login-gate-copy { padding-bottom: 18px; border-bottom: 1px solid var(--line); }
+.admin-login-gate-copy h2 { margin: 0 0 8px; color: var(--green-dark); font-family: var(--font-display); font-size: 30px; }
+.admin-login-gate-copy p:last-child { max-width: 520px; margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
+.auth-access-gate { display: grid; gap: 10px; margin: 0; padding: 14px; border: 1px solid var(--line); border-radius: 13px; background: #f8faf6; }
+.auth-access-gate legend { padding: 0 6px; color: var(--green-dark); font-size: 11px; font-weight: 800; }
+.auth-access-gate label { display: grid; gap: 6px; color: var(--ink); font-size: 11px; font-weight: 800; }
+.auth-access-gate select { min-height: 40px; padding: 9px 11px; border: 1px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); font: inherit; font-size: 12px; }
+.auth-access-gate .auth-access-check { display: flex; grid-template-columns: auto 1fr; align-items: flex-start; gap: 8px; color: var(--muted); font-size: 11px; font-weight: 600; line-height: 1.5; }
+.auth-access-check input { margin-top: 2px; accent-color: var(--green); }
+.auth-access-gate small { color: var(--muted); font-size: 10px; line-height: 1.5; }
 @media (max-width: 1050px) {
   .admin-management-layout { grid-template-columns: 1fr; }
   .admin-sidebar { position: static; display: flex; overflow-x: auto; gap: 3px; padding: 7px; }

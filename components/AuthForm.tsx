@@ -48,9 +48,10 @@ export function AuthForm({ mode }: AuthFormProps) {
     <label>Email<input name="email" type="email" autoComplete="email" required /></label>
     {isRegister && <label>Phone<input name="phone" type="tel" autoComplete="tel" required /></label>}
     <label>Password<input name="password" type="password" autoComplete={isRegister ? "new-password" : "current-password"} minLength={isRegister ? 8 : undefined} required /></label>
+    {isAdmin && <fieldset className="auth-access-gate"><legend>Workspace access</legend><label>Access level<select name="requested_role" defaultValue="staff"><option value="staff">Staff member</option><option value="admin">Administrator</option></select></label><label className="auth-access-check"><input name="access_acknowledged" type="checkbox" required /> I confirm that I am an approved Flora &amp; Creations team member.</label><small>Access is still verified against your account permissions after sign-in.</small></fieldset>}
     {notice && <p className="form-success" role="status">{notice}</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
-    <button className="button button-primary" type="submit" disabled={pending}>{pending ? "Signing in…" : isRegister ? "Create account" : isAdmin ? "Sign in to admin" : "Sign in"}</button>
+    <button className="button button-primary" type="submit" disabled={pending}>{pending ? "Signing in…" : isRegister ? "Create account" : isAdmin ? "Enter workspace" : "Sign in"}</button>
     {isRegister ? <Link className="text-link" href="/login">Already have an account? Sign in</Link> : isAdmin ? <Link className="text-link" href="/">Return to the storefront</Link> : <Link className="text-link" href="/register">New here? Create an account</Link>}
   </form>;
 }
