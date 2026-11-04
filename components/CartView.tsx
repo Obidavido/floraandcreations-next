@@ -6,7 +6,11 @@ import { useCart } from "@/components/CartProvider";
 import { ProductImage } from "@/components/ProductImage";
 
 export function CartView() {
-  const { items, subtotal, setQuantity, removeItem } = useCart();
+  const { items, subtotal, hydrated, setQuantity, removeItem } = useCart();
+
+  if (!hydrated) {
+    return <div className="empty-state" aria-live="polite"><p className="eyebrow">Your cart</p><h1>Loading your cart…</h1><p>Your saved items are being restored.</p></div>;
+  }
 
   if (!items.length) {
     return <div className="empty-state"><p className="eyebrow">Your cart</p><h1>Nothing here yet.</h1><p>Find something beautiful and we will keep it ready for checkout.</p><Link className="button button-primary" href="/shop">Browse the shop</Link></div>;
