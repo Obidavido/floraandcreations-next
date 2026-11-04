@@ -14,10 +14,13 @@
     { "path": "/order/:reference", "title": "Track an order" },
     { "path": "/account", "title": "Your account" },
     { "path": "/account/:section", "title": "Account" },
+    { "path": "/account/orders/:id", "title": "Order details" },
     { "path": "/admin/login", "title": "Admin sign in" },
     { "path": "/admin", "title": "Admin overview" },
     { "path": "/admin/orders", "title": "Admin orders" },
     { "path": "/admin/products", "title": "Admin products" },
+    { "path": "/admin/products/new", "title": "Add admin product" },
+    { "path": "/admin/products/:id/edit", "title": "Edit admin product" },
     { "path": "/admin/categories", "title": "Admin categories" },
     { "path": "/admin/add-ons", "title": "Admin gift add-ons" },
     { "path": "/admin/delivery-zones", "title": "Admin delivery zones" },
@@ -25,7 +28,6 @@
     { "path": "/admin/staff", "title": "Admin staff" },
     { "path": "/admin/activity-logs", "title": "Admin activity logs" },
     { "path": "/admin/settings", "title": "Admin settings" },
-    { "path": "/admin/stats/summary", "title": "Admin dashboard summary" },
     { "path": "/admin/:section", "title": "Admin section" }
   ]
 }
