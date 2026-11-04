@@ -38,6 +38,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
   const [selectedProduct, setSelectedProduct] = useState<ProductRow | null>(null);
   const [variants, setVariants] = useState<VariantRow[]>([]);
   const [variantForm, setVariantForm] = useState({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" });
+  const [variantImageFiles, setVariantImageFiles] = useState<File[]>([]);
   const [editingVariant, setEditingVariant] = useState<string | null>(null);
 
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -116,9 +117,15 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
     setSaving(true); setError(""); setNotice("");
     try {
       const path = editingVariant ? `/admin/variants/${encodeURIComponent(editingVariant)}` : `/admin/products/${encodeURIComponent(String(selectedProduct.id))}/variants`;
-      await adminRequest(path, { method: editingVariant ? "PUT" : "POST", body: { ...variantForm, price: Number(variantForm.price) } });
+      const saved = await adminRequest<VariantRow>(path, { method: editingVariant ? "PUT" : "POST", body: { ...variantForm, price: Number(variantForm.price) } });
+      const variantId = editingVariant || String(saved.id || "");
+      if (variantId && variantImageFiles.length) {
+        const data = new FormData();
+        variantImageFiles.forEach((file) => data.append("images[]", file));
+        await adminRequest(`/admin/variants/${encodeURIComponent(variantId)}/images`, { method: "POST", body: data });
+      }
       const result = await adminRequest<VariantRow[]>(`/admin/products/${encodeURIComponent(String(selectedProduct.id))}/variants`);
-      setVariants(adminList<VariantRow>(result)); setVariantForm({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" }); setEditingVariant(null); setNotice("Variant saved.");
+      setVariants(adminList<VariantRow>(result)); setVariantForm({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" }); setVariantImageFiles([]); setEditingVariant(null); setNotice("Variant saved.");
     } catch (variantError) { setError(showError(variantError)); }
     finally { setSaving(false); }
   }
@@ -188,7 +195,7 @@ export function AdminCatalog({ section }: { section: "products" | "categories" |
         {editingProduct && selectedProduct && <div className="admin-variant-manager">
           <div className="admin-panel-heading"><div><p className="eyebrow">Variants</p><h3>Sizes, colours &amp; stock</h3></div></div>
           {variants.length > 0 && <div className="admin-table-wrap"><table className="admin-table"><thead><tr><th>Size / colour</th><th>SKU</th><th>Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody>{variants.map((variant) => <tr key={variant.id}><td>{[variant.size, variant.color].filter(Boolean).join(" · ") || "Standard"}</td><td>{variant.sku || "—"}</td><td>{formatNaira(asNumber(variant.price))}</td><td>{variant.stock_status.replaceAll("_", " ")}</td><td><button className="text-button" type="button" onClick={() => { setEditingVariant(String(variant.id)); setVariantForm({ size: variant.size || "", color: variant.color || "", price: String(variant.price), stock_status: variant.stock_status, sku: variant.sku || "" }); }}>Edit</button> <button className="text-button account-delete-button" type="button" onClick={() => void deleteVariant(variant)}>Delete</button></td></tr>)}</tbody></table></div>}
-          <form className="admin-form-grid admin-variant-form" onSubmit={saveVariant}><label>Size<input value={variantForm.size} onChange={(event) => setVariantForm({ ...variantForm, size: event.target.value })} /></label><label>Colour<input value={variantForm.color} onChange={(event) => setVariantForm({ ...variantForm, color: event.target.value })} /></label><label>Price<input required type="number" min="0" step="0.01" value={variantForm.price} onChange={(event) => setVariantForm({ ...variantForm, price: event.target.value })} /></label><label>Stock<select value={variantForm.stock_status} onChange={(event) => setVariantForm({ ...variantForm, stock_status: event.target.value })}>{stockOptions.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}</select></label><label>SKU (optional)<input value={variantForm.sku} onChange={(event) => setVariantForm({ ...variantForm, sku: event.target.value })} /></label><div className="admin-form-actions"><button className="button button-secondary" type="submit" disabled={saving}>{saving ? "Saving…" : editingVariant ? "Update variant" : "Add variant"}</button>{editingVariant && <button className="text-button" type="button" onClick={() => { setEditingVariant(null); setVariantForm({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" }); }}>Cancel</button>}</div></form>
+          <form className="admin-form-grid admin-variant-form" onSubmit={saveVariant}><label>Size<input value={variantForm.size} onChange={(event) => setVariantForm({ ...variantForm, size: event.target.value })} /></label><label>Colour<input value={variantForm.color} onChange={(event) => setVariantForm({ ...variantForm, color: event.target.value })} /></label><label>Price<input required type="number" min="0" step="0.01" value={variantForm.price} onChange={(event) => setVariantForm({ ...variantForm, price: event.target.value })} /></label><label>Stock<select value={variantForm.stock_status} onChange={(event) => setVariantForm({ ...variantForm, stock_status: event.target.value })}>{stockOptions.map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}</select></label><label>SKU (optional)<input value={variantForm.sku} onChange={(event) => setVariantForm({ ...variantForm, sku: event.target.value })} /></label><label className="admin-form-wide">Variant images<input type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple onChange={(event) => setVariantImageFiles(Array.from(event.target.files || []))} /><small>Images upload after the variant is saved.</small></label><div className="admin-form-actions"><button className="button button-secondary" type="submit" disabled={saving}>{saving ? "Saving…" : editingVariant ? "Update variant" : "Add variant"}</button>{editingVariant && <button className="text-button" type="button" onClick={() => { setEditingVariant(null); setVariantImageFiles([]); setVariantForm({ size: "", color: "", price: "", stock_status: "in_stock", sku: "" }); }}>Cancel</button>}</div></form>
         </div>}
       </section>}
       {!loading && products.length === 0 && <div className="admin-panel admin-empty-state"><h3>No products found</h3><p className="detail-copy">Create a product or adjust the search.</p><button className="button button-primary" type="button" onClick={() => { setProductForm({ ...emptyProduct }); setEditingProduct(""); }}>Add product</button></div>}

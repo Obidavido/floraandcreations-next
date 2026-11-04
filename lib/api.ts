@@ -9,6 +9,9 @@ export type AdminSummary = {
   pending_verification?: string | number;
   pending_fulfillment?: string | number;
   today_scheduled?: string | number;
+  order_status_counts?: Array<{ order_status?: string; count?: string | number }>;
+  payment_status_counts?: Array<{ payment_status?: string; count?: string | number }>;
+  fulfillment_counts?: Array<{ fulfillment_type?: string; count?: string | number }>;
   recent_orders?: Array<{ id: string | number; order_number?: string; customer_name?: string; total?: string | number; order_status?: string; payment_status?: string; created_at?: string }>;
   top_products?: Array<{ id: string | number; name: string; total_sold?: string | number; total_revenue?: string | number }>;
 };
