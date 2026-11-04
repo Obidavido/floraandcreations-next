@@ -28,6 +28,7 @@ type ApiProduct = {
   featured?: boolean | number;
   thumbnail?: string;
   image?: string;
+  images?: Array<{ image_url?: string; url?: string }>;
   product_type?: Array<{ name?: string; slug?: string }>;
   category?: string;
 };
@@ -50,6 +51,7 @@ function normalizeProducts(products: Product[]) {
 
 function mapProduct(product: ApiProduct): Product {
   const category = product.product_type?.[0]?.name || product.category || "Flowers";
+  const detailImage = product.images?.find((image) => image.image_url || image.url);
   return {
     id: String(product.id),
     slug: product.slug,
@@ -57,7 +59,7 @@ function mapProduct(product: ApiProduct): Product {
     description: product.description || product.name,
     price: Number(product.base_price ?? product.price ?? 0),
     category,
-    image: normalizeProductImage(product.thumbnail || product.image),
+    image: normalizeProductImage(product.thumbnail || product.image || detailImage?.image_url || detailImage?.url),
     featured: Boolean(product.featured)
   };
 }
@@ -136,7 +138,10 @@ export async function getProduct(slug: string): Promise<Product | null> {
 export async function getCategories(): Promise<Category[]> {
   const response = await request<{ product_type?: ApiCategory[] } | ApiCategory[]>("/categories");
   const value = Array.isArray(response) ? response : response?.product_type || [];
-  return value.map((category) => ({ id: String(category.id), name: category.name, slug: category.slug }));
+  const addOnSlugs = new Set(["cakes", "cards", "chocolates", "cookies", "fruit-wine", "picture-frames", "teddy-bears", "vases"]);
+  return value
+    .filter((category) => !addOnSlugs.has(category.slug.toLowerCase()))
+    .map((category) => ({ id: String(category.id), name: category.name, slug: category.slug }));
 }
 
 export async function postContact(payload: Record<string, string>) {
