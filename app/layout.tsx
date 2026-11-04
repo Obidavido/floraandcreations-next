@@ -21,8 +21,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en" className={`${jakarta.variable} ${manrope.variable}`}>
       <body>
         <CartProvider>
-          <SiteChrome />
-          <main>{children}</main>
+          <SiteChrome>
+            <main>{children}</main>
+          </SiteChrome>
         </CartProvider>
       </body>
     </html>
