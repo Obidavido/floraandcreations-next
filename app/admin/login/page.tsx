@@ -1,0 +1,3 @@
+import { pageMetadata } from "@/lib/seo";
+export const metadata = pageMetadata("Admin sign in", "Sign in to the Flora and Creations administration area.", "/admin/login", { noIndex: true });
+export default function AdminLoginPage() { return <section className="section container"><div className="auth-card"><p className="eyebrow">Administration</p><h1>Admin sign in.</h1><form className="form-card"><label>Email<input name="email" type="email" required /></label><label>Password<input name="password" type="password" required /></label><button className="button button-primary" type="submit">Sign in</button></form></div></section>; }

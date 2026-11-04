@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { pageMetadata } from "@/lib/seo";
+export const metadata = pageMetadata("Create an account", "Create a Flora and Creations account to manage orders and saved addresses.", "/register", { noIndex: true });
+export default function RegisterPage() { return <section className="section container"><div className="auth-card"><p className="eyebrow">A better way to order</p><h1>Create an account.</h1><form className="form-card"><label>Name<input name="name" required /></label><label>Email<input name="email" type="email" required /></label><label>Phone<input name="phone" type="tel" required /></label><label>Password<input name="password" type="password" required /></label><button className="button button-primary" type="submit">Create account</button><Link className="text-link" href="/login">Already have an account? Sign in</Link></form></div></section>; }
