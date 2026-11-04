@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/components/CartProvider";
 
 export function SiteHeader() {
+  const { itemCount } = useCart();
   return (
     <header className="site-header">
       <div className="container header-inner">
@@ -16,7 +20,7 @@ export function SiteHeader() {
         </nav>
         <div className="header-actions">
           <Link href="/account/wishlist" aria-label="Wishlist">♡</Link>
-          <Link href="/cart" aria-label="Shopping cart">Cart</Link>
+          <Link href="/cart" aria-label={`Shopping cart, ${itemCount} items`}>Cart{itemCount ? ` (${itemCount})` : ""}</Link>
           <Link href="/login" className="account-link">Account</Link>
         </div>
       </div>
