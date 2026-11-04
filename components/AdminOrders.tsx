@@ -34,7 +34,7 @@ export function AdminOrders() {
   const [refreshKey, setRefreshKey] = useState(0);
   const [page, setPage] = useState(1);
   const [pagination, setPagination] = useState<AdminPage<OrderRow>["pagination"] | null>(null);
-  const [filters, setFilters] = useState({ search: "", order_status: "", payment_status: "", fulfillment_type: "" });
+  const [filters, setFilters] = useState({ search: "", order_status: "", payment_status: "", fulfillment_type: "", from_date: "", to_date: "", scheduled_date: "" });
 
   useEffect(() => {
     let active = true;
@@ -87,6 +87,9 @@ export function AdminOrders() {
       <select aria-label="Filter by order status" value={filters.order_status} onChange={(event) => { setFilters({ ...filters, order_status: event.target.value }); setPage(1); }}><option value="">All order statuses</option>{Object.entries(statusLabels).map(([value, label]) => <option key={value} value={value}>{label}</option>)}</select>
       <select aria-label="Filter by payment status" value={filters.payment_status} onChange={(event) => { setFilters({ ...filters, payment_status: event.target.value }); setPage(1); }}><option value="">All payments</option>{["pending", "proof_submitted", "confirmed", "failed"].map((value) => <option key={value} value={value}>{display(value)}</option>)}</select>
       <select aria-label="Filter fulfillment type" value={filters.fulfillment_type} onChange={(event) => { setFilters({ ...filters, fulfillment_type: event.target.value }); setPage(1); }}><option value="">Delivery or pickup</option><option value="delivery">Delivery</option><option value="pickup">Pickup</option></select>
+      <label className="admin-filter-date">From<input type="date" value={filters.from_date} onChange={(event) => { setFilters({ ...filters, from_date: event.target.value }); setPage(1); }} /></label>
+      <label className="admin-filter-date">To<input type="date" value={filters.to_date} onChange={(event) => { setFilters({ ...filters, to_date: event.target.value }); setPage(1); }} /></label>
+      <label className="admin-filter-date">Scheduled<input type="date" value={filters.scheduled_date} onChange={(event) => { setFilters({ ...filters, scheduled_date: event.target.value }); setPage(1); }} /></label>
     </div>
     <AdminPagination pagination={pagination || null} onPageChange={setPage} />
     {error && <p className="form-error admin-message" role="alert">{error}</p>}{notice && <p className="form-success admin-message" role="status">{notice}</p>}

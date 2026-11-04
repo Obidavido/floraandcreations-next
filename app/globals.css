@@ -397,6 +397,14 @@ p { line-height: 1.75; }
 .admin-order-filters { display: flex; flex-wrap: wrap; gap: 9px; }
 .admin-order-filters .admin-search-input { flex: 1 1 245px; }
 .admin-order-filters select { flex: 0 1 auto; }
+.admin-filter-date { display: flex; align-items: center; gap: 6px; min-height: 42px; padding: 0 9px; border: 1px solid var(--line); border-radius: 10px; background: white; color: var(--muted); font-size: 10px; font-weight: 800; }
+.admin-filter-date input { min-width: 125px; border: 0; outline: 0; color: var(--ink); font: inherit; font-weight: 500; }
+.admin-module-links { display: grid; gap: 16px; }
+.admin-module-link-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.admin-module-link { display: grid; gap: 6px; min-height: 78px; padding: 13px; border: 1px solid var(--line); border-radius: 12px; background: #fff; color: var(--ink); }
+.admin-module-link:hover { border-color: var(--green); background: #f7f9f4; }
+.admin-module-link strong { color: var(--green-dark); font-size: 12px; }
+.admin-module-link span { color: var(--muted); font-size: 10px; line-height: 1.4; }
 .admin-order-detail { position: sticky; top: 18px; display: grid; gap: 14px; }
 .admin-order-detail .admin-panel-heading { margin: 0; }
 .admin-order-meta { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; padding: 14px; border-radius: 13px; background: #f7f9f4; }
@@ -451,7 +459,10 @@ p { line-height: 1.75; }
   .admin-resource-actions .admin-search-input { flex: 1; min-width: 0; }
   .admin-resource-actions .button { flex: 0 0 auto; }
   .admin-order-filters { display: grid; grid-template-columns: 1fr; }
-  .admin-order-filters .admin-search-input, .admin-order-filters select { width: 100%; }
+  .admin-order-filters .admin-search-input, .admin-order-filters select, .admin-filter-date { width: 100%; }
+  .admin-filter-date { justify-content: space-between; }
+  .admin-filter-date input { flex: 1; min-width: 0; text-align: right; }
+  .admin-module-link-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .admin-settings-lower { grid-template-columns: 1fr; }
 }
 @media (max-width: 480px) {
@@ -465,6 +476,7 @@ p { line-height: 1.75; }
   .admin-resource-actions .button { width: 100%; }
   .admin-order-meta { grid-template-columns: 1fr 1fr; }
   .admin-payment-actions { display: grid; grid-template-columns: 1fr 1fr; }
+  .admin-module-link-grid { grid-template-columns: 1fr; }
 }
 
 .admin-pagination { display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--muted); font-size: 11px; }

@@ -77,6 +77,8 @@ export function AdminAccess() {
 
   const recentOrders = summary?.recent_orders || [];
   const topProducts = summary?.top_products || [];
+  const orderStatuses = summary?.order_status_counts || [];
+  const paymentStatuses = summary?.payment_status_counts || [];
 
   return <div className="admin-dashboard">
     <div className="admin-dashboard-heading">
@@ -113,6 +115,22 @@ export function AdminAccess() {
           {topProducts.length ? <div className="admin-product-list">{topProducts.slice(0, 6).map((product, index) => <div className="admin-product-row" key={product.id}><span className="admin-product-rank">{index + 1}</span><div><strong>{product.name}</strong><small>{asNumber(product.total_sold).toLocaleString("en-NG")} sold</small></div><b>{formatNaira(asNumber(product.total_revenue))}</b></div>)}</div> : <p className="admin-empty-note">Sales rankings will appear when products have orders.</p>}
         </section>
       </div>
+      <div className="admin-dashboard-grid">
+        <section className="admin-panel">
+          <div className="admin-panel-heading"><div><p className="eyebrow">Operations</p><h3>Order status</h3></div><Link className="text-link" href="/admin/orders">Manage orders</Link></div>
+          {orderStatuses.length ? <div className="admin-product-list">{orderStatuses.map((item) => <div className="admin-product-row" key={item.order_status}><strong>{formatStatus(item.order_status)}</strong><b>{asNumber(item.count).toLocaleString("en-NG")}</b></div>)}</div> : <p className="admin-empty-note">No order status data yet.</p>}
+        </section>
+        <section className="admin-panel">
+          <div className="admin-panel-heading"><div><p className="eyebrow">Payments</p><h3>Payment status</h3></div><Link className="text-link" href="/admin/orders">Review payments</Link></div>
+          {paymentStatuses.length ? <div className="admin-product-list">{paymentStatuses.map((item) => <div className="admin-product-row" key={item.payment_status}><strong>{formatStatus(item.payment_status)}</strong><b>{asNumber(item.count).toLocaleString("en-NG")}</b></div>)}</div> : <p className="admin-empty-note">No payment status data yet.</p>}
+        </section>
+      </div>
+      <section className="admin-panel admin-module-links">
+        <div className="admin-panel-heading"><div><p className="eyebrow">Workspace</p><h3>Manage the store</h3></div></div>
+        <div className="admin-module-link-grid">
+          {[['/admin/products', 'Products', 'Catalog, images and variants'], ['/admin/categories', 'Categories', 'Product types and occasions'], ['/admin/add-ons', 'Gift add-ons', 'Checkout extras and pricing'], ['/admin/delivery-zones', 'Delivery zones', 'Areas and delivery fees'], ['/admin/customers', 'Customers', 'Accounts and order history'], ['/admin/staff', 'Staff access', 'Administrator and staff accounts'], ['/admin/activity-logs', 'Activity logs', 'Audit trail of admin actions'], ['/admin/settings', 'Store settings', 'Business configuration and password']].map(([href, title, description]) => <Link className="admin-module-link" href={href} key={href}><strong>{title}</strong><span>{description}</span></Link>)}
+        </div>
+      </section>
       {summary.revenue && <p className="admin-footnote">Revenue snapshot: this week {formatNaira(asNumber(summary.revenue.revenue_this_week))} · this month {formatNaira(asNumber(summary.revenue.revenue_this_month))}. Figures are supplied by the protected admin API.</p>}
     </>}
   </div>;
