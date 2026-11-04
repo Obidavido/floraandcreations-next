@@ -1,0 +1,21 @@
+{
+  "routes": [
+    { "path": "/", "title": "Flora and Creations — Bouquets & Gifts" },
+    { "path": "/shop", "title": "Shop Flowers & Gifts" },
+    { "path": "/products/:slug", "title": "Product details" },
+    { "path": "/about", "title": "About Flora and Creations" },
+    { "path": "/contact", "title": "Contact Flora and Creations" },
+    { "path": "/faq", "title": "Frequently asked questions" },
+    { "path": "/cart", "title": "Your cart" },
+    { "path": "/checkout", "title": "Checkout" },
+    { "path": "/login", "title": "Sign in" },
+    { "path": "/register", "title": "Create an account" },
+    { "path": "/order-confirmation", "title": "Order confirmation" },
+    { "path": "/order/:reference", "title": "Track an order" },
+    { "path": "/account", "title": "Your account" },
+    { "path": "/account/:section", "title": "Account" },
+    { "path": "/admin/login", "title": "Admin sign in" },
+    { "path": "/admin", "title": "Admin" },
+    { "path": "/admin/:section", "title": "Admin" }
+  ]
+}

@@ -1,0 +1,12 @@
+# Flora and Creations — Project Outcomes
+
+- [x] Phase 1 audit, route map, component inventory, and API surface recovered.
+- [x] Contact API patch retained for owner-managed cPanel upload; no PHP deployment performed.
+- [x] Next.js App Router scaffold created with the approved brand, route families, fonts, SEO metadata, sitemap, robots, and route manifest.
+- [x] Supplied hero and logo assets converted to WebP without touching PHP uploads.
+- [x] Global icon-only WhatsApp control added with both approved business numbers.
+- [x] Vercel rewrite, environment template, GitHub Actions checks, and deployment README added.
+- [ ] Connect the approved public GitHub repository, push a feature branch, and open a PR against `main`.
+- [ ] Install dependencies, run typecheck/build, resolve diagnostics, and verify Preview.
+- [ ] Owner-managed cPanel contact patch, API origin, CORS, Vercel environment values, and DNS remain deployment actions requiring owner control.
+- [ ] Phase 7 Preview QA remains open: catalog, cart, auth, bank-transfer checkout, payment proof, account/admin flows, images, SEO, mobile, desktop, and Lighthouse.
