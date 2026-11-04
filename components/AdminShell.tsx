@@ -23,6 +23,7 @@ export function AdminShell({ title, description, children }: { title: string; de
   const router = useRouter();
   const [user, setUser] = useState<AuthUser | null>(null);
   const [ready, setReady] = useState(false);
+  const [mobileMoreOpen, setMobileMoreOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -65,6 +66,11 @@ export function AdminShell({ title, description, children }: { title: string; de
       <nav className="admin-sidebar" aria-label="Administration sections">
         {links.map(([href, label]) => <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)) ? "active" : ""}>{label}</Link>)}
       </nav>
+      <nav className="dashboard-mobile-tabs" aria-label="Mobile administration sections">
+        {links.slice(0, 4).map(([href, label]) => <Link key={href} href={href} className={pathname === href || (href !== "/admin" && pathname.startsWith(`${href}/`)) ? "active" : ""}>{label}</Link>)}
+        <button type="button" className={mobileMoreOpen ? "active" : ""} aria-expanded={mobileMoreOpen} onClick={() => setMobileMoreOpen((open) => !open)}>More</button>
+      </nav>
+      {mobileMoreOpen && <div className="dashboard-mobile-more"><p className="eyebrow">More admin sections</p>{links.slice(4).map(([href, label]) => <Link key={href} href={href} onClick={() => setMobileMoreOpen(false)} className={pathname === href || pathname.startsWith(`${href}/`) ? "active" : ""}>{label}</Link>)}</div>}
       <main className="admin-management-content">{children}</main>
     </div>
   </div>;
