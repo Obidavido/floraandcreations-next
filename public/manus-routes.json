@@ -15,7 +15,17 @@
     { "path": "/account", "title": "Your account" },
     { "path": "/account/:section", "title": "Account" },
     { "path": "/admin/login", "title": "Admin sign in" },
-    { "path": "/admin", "title": "Admin" },
-    { "path": "/admin/:section", "title": "Admin" }
+    { "path": "/admin", "title": "Admin overview" },
+    { "path": "/admin/orders", "title": "Admin orders" },
+    { "path": "/admin/products", "title": "Admin products" },
+    { "path": "/admin/categories", "title": "Admin categories" },
+    { "path": "/admin/add-ons", "title": "Admin gift add-ons" },
+    { "path": "/admin/delivery-zones", "title": "Admin delivery zones" },
+    { "path": "/admin/customers", "title": "Admin customers" },
+    { "path": "/admin/staff", "title": "Admin staff" },
+    { "path": "/admin/activity-logs", "title": "Admin activity logs" },
+    { "path": "/admin/settings", "title": "Admin settings" },
+    { "path": "/admin/stats/summary", "title": "Admin dashboard summary" },
+    { "path": "/admin/:section", "title": "Admin section" }
   ]
 }
