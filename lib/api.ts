@@ -1,7 +1,17 @@
 import type { Category, Product } from "./types";
 
-export type AuthUser = { id?: string | number; name?: string; email?: string; phone?: string };
+export type AuthUser = { id?: string | number; name?: string; email?: string; phone?: string; role?: string };
 export type AuthResult = { token?: string; user?: AuthUser; message?: string };
+export type AdminSummary = {
+  revenue?: { revenue_today?: string | number; revenue_this_week?: string | number; revenue_this_month?: string | number };
+  total_orders?: string | number;
+  total_customers?: string | number;
+  pending_verification?: string | number;
+  pending_fulfillment?: string | number;
+  today_scheduled?: string | number;
+  recent_orders?: Array<{ id: string | number; order_number?: string; customer_name?: string; total?: string | number; order_status?: string; payment_status?: string; created_at?: string }>;
+  top_products?: Array<{ id: string | number; name: string; total_sold?: string | number; total_revenue?: string | number }>;
+};
 
 const baseUrl = typeof window === "undefined"
   ? `${(process.env.API_ORIGIN || "https://floraandcreations.com").replace(/\/$/, "")}/api`
@@ -82,7 +92,13 @@ async function authenticate(path: string, payload: Record<string, string>): Prom
   try {
     const response = await fetch(absoluteUrl(path), { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify(payload) });
     const body = await response.json().catch(() => ({})) as Record<string, unknown>;
-    if (!response.ok) throw new Error(typeof body.message === "string" ? body.message : "The details could not be accepted. Please check them and try again.");
+    if (!response.ok) {
+      const validationErrors = body.errors && typeof body.errors === "object"
+        ? Object.values(body.errors as Record<string, unknown>).flatMap((value) => Array.isArray(value) ? value : [value]).filter((value): value is string => typeof value === "string").join(" ")
+        : "";
+      const message = typeof body.message === "string" ? body.message : typeof body.error === "string" ? body.error : validationErrors;
+      throw new Error(message || "The details could not be accepted. Please check them and try again.");
+    }
     const data = (body.data && typeof body.data === "object" ? body.data : body) as Record<string, unknown>;
     const token = typeof data.token === "string" ? data.token : typeof data.access_token === "string" ? data.access_token : undefined;
     const user = data.user && typeof data.user === "object" ? data.user as AuthUser : undefined;
@@ -93,8 +109,8 @@ async function authenticate(path: string, payload: Record<string, string>): Prom
   }
 }
 
-export function signIn(payload: Record<string, string>) { return authenticate("/login", payload); }
-export function registerUser(payload: Record<string, string>) { return authenticate("/register", payload); }
+export function signIn(payload: Record<string, string>) { return authenticate("/auth/login", payload); }
+export function registerUser(payload: Record<string, string>) { return authenticate("/auth/register", payload); }
 
 function unwrap<T>(value: T | { data?: T; products?: T; categories?: T }): T {
   if (value && typeof value === "object") {
@@ -129,4 +145,19 @@ export async function postContact(payload: Record<string, string>) {
 
 export function formatNaira(value: number) {
   return new Intl.NumberFormat("en-NG", { style: "currency", currency: "NGN", maximumFractionDigits: 0 }).format(value);
+}
+
+export async function getAdminSummary(): Promise<AdminSummary> {
+  const token = typeof window !== "undefined" ? window.localStorage.getItem("fc.token.v1") : null;
+  if (!token) throw new Error("Your admin session has expired. Please sign in again.");
+  const response = await fetch(absoluteUrl("/admin/stats/summary"), {
+    method: "GET",
+    headers: { Accept: "application/json", Authorization: `Bearer ${token}` },
+    cache: "no-store"
+  });
+  const body = await response.json().catch(() => ({})) as Record<string, unknown>;
+  if (!response.ok) {
+    throw new Error(typeof body.error === "string" ? body.error : "The admin summary could not be loaded.");
+  }
+  return body as AdminSummary;
 }

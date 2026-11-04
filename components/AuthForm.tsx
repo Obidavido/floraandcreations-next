@@ -8,7 +8,7 @@ import { registerUser, signIn, type AuthUser } from "@/lib/api";
 const TOKEN_KEY = "fc.token.v1";
 const USER_KEY = "fc.user.v1";
 
-type AuthFormProps = { mode: "login" | "register" };
+type AuthFormProps = { mode: "login" | "register" | "admin" };
 
 export function AuthForm({ mode }: AuthFormProps) {
   const router = useRouter();
@@ -17,7 +17,8 @@ export function AuthForm({ mode }: AuthFormProps) {
   const [error, setError] = useState("");
   const [notice, setNotice] = useState(searchParams.get("registered") ? "Account created. Sign in to continue." : "");
   const isRegister = mode === "register";
-  const redirect = searchParams.get("redirect") || "/account";
+  const isAdmin = mode === "admin";
+  const redirect = isAdmin ? "/admin" : searchParams.get("redirect") || "/account";
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -28,6 +29,9 @@ export function AuthForm({ mode }: AuthFormProps) {
     const payload = Object.fromEntries(form.entries()) as Record<string, string>;
     try {
       const result = isRegister ? await registerUser(payload) : await signIn(payload);
+      if (isAdmin && (!result.token || !["admin", "staff"].includes(result.user?.role?.toLowerCase() || ""))) {
+        throw new Error("This account does not have permission to access the admin area.");
+      }
       if (result.token) window.localStorage.setItem(TOKEN_KEY, result.token);
       if (result.user) window.localStorage.setItem(USER_KEY, JSON.stringify(result.user));
       if (!isRegister || result.token) router.replace(redirect);
@@ -46,8 +50,8 @@ export function AuthForm({ mode }: AuthFormProps) {
     <label>Password<input name="password" type="password" autoComplete={isRegister ? "new-password" : "current-password"} minLength={isRegister ? 8 : undefined} required /></label>
     {notice && <p className="form-success" role="status">{notice}</p>}
     {error && <p className="form-error" role="alert">{error}</p>}
-    <button className="button button-primary" type="submit" disabled={pending}>{pending ? "Please wait…" : isRegister ? "Create account" : "Sign in"}</button>
-    {isRegister ? <Link className="text-link" href="/login">Already have an account? Sign in</Link> : <Link className="text-link" href="/register">New here? Create an account</Link>}
+    <button className="button button-primary" type="submit" disabled={pending}>{pending ? "Signing in…" : isRegister ? "Create account" : isAdmin ? "Sign in to admin" : "Sign in"}</button>
+    {isRegister ? <Link className="text-link" href="/login">Already have an account? Sign in</Link> : isAdmin ? <Link className="text-link" href="/">Return to the storefront</Link> : <Link className="text-link" href="/register">New here? Create an account</Link>}
   </form>;
 }
 
