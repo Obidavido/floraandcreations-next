@@ -19,14 +19,13 @@ export default async function HomePage() {
     ["Vase Upgrade", "₦2,000"]
   ];
   return <>
-    <section className="legacy-hero"><div className="container legacy-hero-grid">
-      <div>
-        <p className="eyebrow">Handcrafted in Abuja</p>
-        <h1>Celebrate Life&apos;s Special Moment with Fresh Flowers</h1>
-        <p className="lede">Bouquets, gift boxes, chocolates, wines and more beautifully arranged and delivered across Abuja the same day.</p>
-        <Link className="button button-primary" href="/shop">Shop now</Link>
+    <section className="original-hero-section"><div className="container">
+      <div className="original-status-pills"><span>● Open Now</span><span>Abuja Delivery</span><span>Mon–Sat · 9:00 – 18:00</span></div>
+      <div className="original-hero">
+        <Image src="/images/original-hero-bouquet.png" alt="Fresh Flora and Creations bouquet" fill priority sizes="(max-width: 800px) 100vw, 1180px" className="original-hero-image" />
+        <div className="original-hero-overlay" aria-hidden="true" />
+        <div className="original-hero-copy"><p className="original-hero-kicker">✦ Handcrafted in Abuja</p><h1>Celebrate Life&apos;s Special Moment with Fresh Flowers</h1><p>Bouquets, gift boxes, chocolates, wines and more beautifully arranged and delivered across Abuja the same day.</p><Link className="button original-hero-button" href="/shop">Shop now</Link><div className="hero-dots" aria-hidden="true"><span className="active" /><span /><span /><span /></div></div>
       </div>
-      <div className="legacy-hero-media"><Image src={products[0]?.image || "/images/flora-og.png"} alt={products[0]?.name || "Flora and Creations flowers"} width={720} height={520} priority /></div>
     </div></section>
 
     <section className="section container shop-home-section">
